@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OficiosYa.Domain.Entities;
+using OficiosYa.Domain.Enums;
 
 namespace OficiosYa.Infrastructure.Persistence;
 

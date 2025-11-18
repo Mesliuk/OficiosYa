@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using OficiosYa.Application.Interfaces;
+using OficiosYa.Application.Services;
+using OficiosYa.Infrastructure;
 using OficiosYa.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +14,12 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<OficiosYaDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<ITrabajadorRepository, TrabajadorRepository>();
+
+builder.Services.AddScoped<CrearUsuarioService>();
+
 
 
 
