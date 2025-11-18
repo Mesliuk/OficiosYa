@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OficiosYa.Infrastructure
+namespace OficiosYa.Application.Services
 {
     public class ClienteService
     {
