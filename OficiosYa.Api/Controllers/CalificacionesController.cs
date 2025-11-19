@@ -1,83 +1,45 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using OficiosYa.Api.Models;
+using OficiosYa.Application.Commands.Calificaciones;
+using OficiosYa.Application.Handlers.Calificacion;
+
 
 namespace OficiosYa.Api.Controllers
 {
-    public class CalificacionesController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CalificacionesController : ControllerBase
     {
-        // GET: CalificacionController
-        public ActionResult Index()
+        private readonly RegistrarCalificacionHandler _registrarCalificacionHandler;
+
+        public CalificacionesController(RegistrarCalificacionHandler registrarCalificacionHandler)
         {
-            return View();
+            _registrarCalificacionHandler = registrarCalificacionHandler;
         }
 
-        // GET: CalificacionController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: CalificacionController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: CalificacionController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> CrearCalificacion(CalificacionRequest request)
         {
-            try
+            var command = new CrearCalificacionCommand
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                UsuarioCalificaId = request.EmisorId,
+                UsuarioCalificadoId = request.ReceptorId,
+                Puntaje = request.Puntaje,
+                Comentario = request.Comentario
+            };
 
-        // GET: CalificacionController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+            await _registrarCalificacionHandler.HandleAsync(command);
 
-        // POST: CalificacionController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
+            var dto = new OficiosYa.Application.DTOs.CalificacionDto
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                EmisorId = command.UsuarioCalificaId,
+                ReceptorId = command.UsuarioCalificadoId,
+                Puntaje = command.Puntaje,
+                Comentario = command.Comentario
+            };
 
-        // GET: CalificacionController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CalificacionController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return Ok(dto);
         }
     }
 }
+

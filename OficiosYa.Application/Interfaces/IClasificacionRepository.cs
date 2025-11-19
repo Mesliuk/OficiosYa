@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace OficiosYa.Application.Interfaces
 {
-    public interface ICalificacionRepository
+    public interface IClasificacionRepository
     {
         Task RegistrarAsync(CalificacionDto dto);
         Task<IEnumerable<CalificacionDto>> GetByReceptorAsync(int receptorId);
+        Task<double> ObtenerPromedioAsync(int receptorId);
+
     }
 }

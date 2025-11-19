@@ -7,7 +7,7 @@ using OficiosYa.Application.Interfaces;
 
 namespace OficiosYa.Infrastructure.Repositories
 {
-    public class CalificacionRepository : ICalificacionRepository
+    public class CalificacionRepository : IClasificacionRepository
     {
     }
 }

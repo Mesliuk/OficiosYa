@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OficiosYa.Application.Handlers.Calficacion
+namespace OficiosYa.Application.Handlers.Calificacion
 {
     public class RegistrarCalificacionHandler
     {
-        private readonly ICalificacionRepository _califRepo;
-        public RegistrarCalificacionHandler(ICalificacionRepository repo) { _califRepo = repo; }
+        private readonly IClasificacionRepository _clasifRepo;
+        public RegistrarCalificacionHandler(IClasificacionRepository repo) { _clasifRepo = repo; }
         public async Task HandleAsync(CrearCalificacionCommand command) { }
     }
 }

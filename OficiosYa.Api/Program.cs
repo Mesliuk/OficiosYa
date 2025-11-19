@@ -22,7 +22,7 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IProfesionalRepository, ProfesionalRepository>();
 builder.Services.AddScoped<IOficioRepository, OficioRepository>();
-builder.Services.AddScoped<ICalificacionRepository, CalificacionRepository>();
+builder.Services.AddScoped<IClasificacionRepository, CalificacionRepository>();
 builder.Services.AddScoped<IUbicacionRepository, UbicacionRepository>();
 
 // ====================================
