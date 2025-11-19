@@ -12,6 +12,10 @@ namespace OficiosYa.Application.Handlers.Profesional
     {
         private readonly IProfesionalRepository _profRepo;
         public UpdateProfesionalHandler(IProfesionalRepository repo) { _profRepo = repo; }
-        public async Task HandleAsync(Profesional prof) { }
+        
+        public async Task HandleAsync(OficiosYa.Domain.Entities.Profesional prof)
+        {
+            await _profRepo.UpdateAsync(prof);
+        }
     }
 }

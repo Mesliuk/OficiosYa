@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,17 +10,16 @@ using OficiosYa.Domain.Entities;
 
 namespace OficiosYa.Infrastructure.Configurations;
 
-public class DireccionUsuarioConfiguration : IEntityTypeConfiguration<DireccionUsuario>
+public class DireccionClienteConfiguration : IEntityTypeConfiguration<DireccionCliente>
 {
-    public void Configure(EntityTypeBuilder<DireccionUsuario> builder)
+    public void Configure(EntityTypeBuilder<DireccionCliente> builder)
     {
-        builder.ToTable("DireccionesUsuario");
+        builder.ToTable("DireccionesClientes");
 
         builder.HasKey(x => x.Id);
 
-        builder.HasOne(x => x.Usuario)
+        builder.HasOne(x => x.Cliente)
             .WithMany(x => x.Direcciones)
-            .HasForeignKey(x => x.UsuarioId);
+            .HasForeignKey(x => x.ClienteId);
     }
 }
-

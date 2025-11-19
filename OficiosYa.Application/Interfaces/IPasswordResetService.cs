@@ -10,6 +10,6 @@ namespace OficiosYa.Application.Interfaces
     {
         Task<string> GenerarTokenAsync(int usuarioId);
         Task<bool> ValidarTokenAsync(string token);
-        Task<bool> ResetearPasswordAsync(string token, string nuevoPassword);
+        Task<bool> ResetPasswordAsync(string token, string nuevoPassword);
     }
 }

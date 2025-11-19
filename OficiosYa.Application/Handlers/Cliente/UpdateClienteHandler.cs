@@ -21,7 +21,7 @@ namespace OficiosYa.Application.Handlers.Cliente
         }
 
 
-        public async Task<UsuarioDto> HandleAsync(Cliente cliente)
+        public async Task<UsuarioDto> HandleAsync(OficiosYa.Domain.Entities.Cliente cliente)
         {
             // Ejemplo de actualización: se puede modificar nombre, apellido, telefono
             await _clienteRepo.ActualizarAsync(cliente);

@@ -1,4 +1,5 @@
 ﻿using OficiosYa.Application.DTOs;
+using OficiosYa.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,9 @@ namespace OficiosYa.Application.Interfaces
 {
     public interface IUsuarioRepository
     {
-        Task<UsuarioDto?> GetByIdAsync(int id);
-        Task<UsuarioDto?> GetByEmailAsync(string email);
-        Task<int> CreateAsync(RegistroClienteDto dto);
-        Task<int> CreateProfesionalAsync(RegistroProfesionalDto dto);
+        Task<Usuario?> ObtenerPorEmailAsync(string email);
+        Task AgregarAsync(Usuario usuario);
+        Task<Usuario?> GetByIdAsync(int id);
         Task<bool> UpdatePasswordAsync(int userId, string passwordHash);
     }
 }

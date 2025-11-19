@@ -10,25 +10,26 @@ using OficiosYa.Domain.Entities;
 
 namespace OficiosYa.Infrastructure.Configurations;
 
-public class ProfesionalConfiguration : IEntityTypeConfiguration<Trabajador>
+public class ProfesionalConfiguration : IEntityTypeConfiguration<Profesional>
 {
-    public void Configure(EntityTypeBuilder<Trabajador> builder)
+    public void Configure(EntityTypeBuilder<Profesional> builder)
     {
-        builder.ToTable("Trabajadores");
+        builder.ToTable("Profesionales");
 
         builder.HasKey(x => x.Id);
 
         builder.HasOne(x => x.Usuario)
             .WithOne()
-            .HasForeignKey<Trabajador>(x => x.Id);
+            .HasForeignKey<Profesional>(x => x.Id);
 
         builder.HasMany(x => x.Oficios)
-            .WithOne(x => x.Trabajador)
-            .HasForeignKey(x => x.TrabajadorId);
+            .WithOne(x => x.Profesional)
+            .HasForeignKey(x => x.ProfesionalId);
 
-        builder.HasOne(x => x.Ubicacion)
-            .WithOne(x => x.Trabajador)
-            .HasForeignKey<UbicacionTrabajador>(x => x.TrabajadorId);
+        // Ubicacion property does not exist in Profesional entity
+        // builder.HasOne(x => x.Ubicacion)
+        //     .WithOne(x => x.Profesional)
+        //     .HasForeignKey<UbicacionProfesional>(x => x.ProfesionalId);
     }
 }
 

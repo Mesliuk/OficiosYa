@@ -10,11 +10,11 @@ using OficiosYa.Domain.Entities;
 
 namespace OficiosYa.Infrastructure.Configurations;
 
-public class ProfesionalOficioConfiguration : IEntityTypeConfiguration<TrabajadorOficio>
+public class ProfesionalOficioConfiguration : IEntityTypeConfiguration<ProfesionalOficio>
 {
-    public void Configure(EntityTypeBuilder<TrabajadorOficio> builder)
+    public void Configure(EntityTypeBuilder<ProfesionalOficio> builder)
     {
-        builder.ToTable("TrabajadoresOficios");
+        builder.ToTable("ProfesionalesOficios");
 
         builder.HasKey(x => x.Id);
     }

@@ -57,10 +57,11 @@ namespace OficiosYa.Api.Controllers
                 request.Nombre,
                 request.Apellido,
                 request.Correo,
-                request.Password,
                 request.Telefono,
+                request.Password,
+                request.Documento,
+                request.Descripcion, // Bio
                 request.OficioId
-               
             );
 
             var result = await _registerProfesionalHandler.HandleAsync(command);

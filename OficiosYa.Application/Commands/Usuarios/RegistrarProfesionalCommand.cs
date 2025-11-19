@@ -13,6 +13,8 @@ namespace OficiosYa.Application.Commands.Usuarios
         public string Correo { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public string Documento { get; set; } = string.Empty;
+        public string Bio { get; set; } = string.Empty;
         public int OficioId { get; set; }
 
         public RegistrarProfesionalCommand(
@@ -21,6 +23,8 @@ namespace OficiosYa.Application.Commands.Usuarios
             string correo,
             string telefono,
             string password,
+            string documento,
+            string bio,
             int oficioId)
         {
             Nombre = nombre;
@@ -28,6 +32,8 @@ namespace OficiosYa.Application.Commands.Usuarios
             Correo = correo;
             Telefono = telefono;
             Password = password;
+            Documento = documento;
+            Bio = bio;
             OficioId = oficioId;
         }
     }

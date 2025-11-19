@@ -16,7 +16,7 @@ namespace OficiosYa.Application.Handlers.Usuarios
 
         public async Task<bool> HandleAsync(ResetPasswordCommand command)
         {
-            return await _passwordResetService.ResetPasswordAsync(command.Email, command.Token, command.NewPassword);
+            return await _passwordResetService.ResetPasswordAsync(command.Codigo, command.NuevoPassword);
         }
     }
 }

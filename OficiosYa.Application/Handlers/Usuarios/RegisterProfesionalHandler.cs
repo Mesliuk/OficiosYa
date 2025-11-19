@@ -46,7 +46,7 @@ namespace OficiosYa.Application.Handlers.Usuarios
             await _usuarioRepo.AgregarAsync(usuario);
 
 
-            var profesional = new Profesional
+            var profesional = new OficiosYa.Domain.Entities.Profesional
             {
                 Usuario = usuario,
                 Documento = command.Documento,

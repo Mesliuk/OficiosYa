@@ -11,5 +11,7 @@ namespace OficiosYa.Application.Interfaces
     public interface IClienteRepository
     {
         Task<Cliente?> GetByUsuarioIdAsync(int usuarioId);
+        Task ActualizarAsync(Cliente cliente);
+        Task AgregarAsync(Cliente cliente);
     }
 }
