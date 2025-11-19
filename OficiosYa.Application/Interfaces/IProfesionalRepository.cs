@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace OficiosYa.Application.Interfaces
 {
-    internal class IOficioRepository
+    public interface IProfesionalRepository
     {
+        Task<Profesional?> GetByUsuarioIdAsync(int usuarioId);
+        Task<IEnumerable<Profesional>> BuscarPorFiltrosAsync(string? oficio, double? lat, double? lng, double? maxDist, int? minimoRating);
     }
 }

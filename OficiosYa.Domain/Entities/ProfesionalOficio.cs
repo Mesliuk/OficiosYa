@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace OficiosYa.Domain.Entities
 {
-    internal class ProfesionalOficio
+    public class ProfesionalOficio
     {
+        public int Id { get; set; }
+        public int ProfesionalId { get; set; }
+        public int OficioId { get; set; }
+        public int AnosExperiencia { get; set; }
+
+
+        public Profesional Profesional { get; set; } = null!;
+        public Oficio Oficio { get; set; } = null!;
     }
 }

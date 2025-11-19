@@ -6,7 +6,16 @@ using System.Threading.Tasks;
 
 namespace OficiosYa.Domain.Entities
 {
-    internal class DireccionCliente
+    public class DireccionCliente
     {
+        public int Id { get; set; }
+        public int ClienteId { get; set; }
+        public string Alias { get; set; } = "Ubicación";
+        public string Direccion { get; set; } = null!;
+        public double Latitud { get; set; }
+        public double Longitud { get; set; }
+
+
+        public Cliente Cliente { get; set; } = null!;
     }
 }

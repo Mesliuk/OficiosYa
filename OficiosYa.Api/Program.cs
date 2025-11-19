@@ -1,40 +1,54 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OficiosYa.Application.Interfaces;
 using OficiosYa.Application.Services;
-using OficiosYa.Infrastructure;
 using OficiosYa.Infrastructure.Persistence;
+using OficiosYa.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Add controllers
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// DbContext
 builder.Services.AddDbContext<OficiosYaDbContext>(options =>
-options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
+// ====================================
+// REPOSITORIES (Infrastructure → Application.Interfaces)
+// ====================================
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddScoped<ITrabajadorRepository, TrabajadorRepository>();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IProfesionalRepository, ProfesionalRepository>();
+builder.Services.AddScoped<IOficioRepository, OficioRepository>();
+builder.Services.AddScoped<ICalificacionRepository, CalificacionRepository>();
+builder.Services.AddScoped<IUbicacionRepository, UbicacionRepository>();
 
-builder.Services.AddScoped<CrearUsuarioService>();
-
-
-
+// ====================================
+// APPLICATION SERVICES
+// ====================================
+builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<ClienteService>();
+builder.Services.AddScoped<ProfesionalService>();
+builder.Services.AddScoped<OficioService>();
+builder.Services.AddScoped<CalificacionService>();
+builder.Services.AddScoped<UbicacionService>();
+builder.Services.AddScoped<PasswordResetService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
+

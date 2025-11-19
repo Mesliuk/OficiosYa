@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OficiosYa.Application.Interfaces
+namespace OficiosYa.Application.Queries.Oficios
 {
-    internal class IOficioRepository
+    public class GetAllOficiosQuery
     {
     }
 }

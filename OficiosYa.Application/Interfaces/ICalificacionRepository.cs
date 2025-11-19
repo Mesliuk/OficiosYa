@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OficiosYa.Application.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace OficiosYa.Application.Interfaces
 {
-    internal class ICalificacionRepository
-
+    public interface ICalificacionRepository
     {
+        Task RegistrarAsync(CalificacionDto dto);
+        Task<IEnumerable<CalificacionDto>> GetByReceptorAsync(int receptorId);
     }
 }

@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace OficiosYa.Application.Queries.Oficios
+{
+    public class GetOficioByIdQuery
+    {
+        public int OficioId { get; set; }
+    }
+}

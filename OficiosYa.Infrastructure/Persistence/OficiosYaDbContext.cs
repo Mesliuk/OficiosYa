@@ -1,29 +1,63 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OficiosYa.Domain.Entities;
-using OficiosYa.Domain.Enums;
+using OficiosYa.Domain.Entities; // Ajusta según el namespace de tus entidades
 
-namespace OficiosYa.Infrastructure.Persistence;
-
-public class OficiosYaDbContext : DbContext
+namespace OficiosYa.Infrastructure.Persistence
 {
-    public OficiosYaDbContext(DbContextOptions<OficiosYaDbContext> options)
-        : base(options)
+    public class OficiosYaDbContext : DbContext
     {
-    }
+        public OficiosYaDbContext(DbContextOptions<OficiosYaDbContext> options)
+            : base(options)
+        { }
 
-    public DbSet<Usuario> Usuarios => Set<Usuario>();
-    public DbSet<UsuarioRol> UsuariosRoles => Set<UsuarioRol>();
-    public DbSet<Trabajador> Trabajadores => Set<Trabajador>();
-    public DbSet<Oficio> Oficios => Set<Oficio>();
-    public DbSet<TrabajadorOficio> TrabajadoresOficios => Set<TrabajadorOficio>();
-    public DbSet<DireccionUsuario> DireccionesUsuarios => Set<DireccionUsuario>();
-    public DbSet<UbicacionTrabajador> UbicacionesTrabajadores => Set<UbicacionTrabajador>();
-    public DbSet<SolicitudServicio> SolicitudesServicios => Set<SolicitudServicio>();
-    public DbSet<SolicitudCandidato> SolicitudesCandidatos => Set<SolicitudCandidato>();
-    public DbSet<Calificacion> Calificaciones => Set<Calificacion>();
+        // DbSets según tus entidades
+        public DbSet<Calificacion> Calificaciones { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<DireccionCliente> DireccionesClientes { get; set; }
+        public DbSet<Oficio> Oficios { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+        public DbSet<Profesional> Profesionales { get; set; }
+        public DbSet<ProfesionalOficio> ProfesionalesOficios { get; set; }
+        public DbSet<UbicacionProfesional> UbicacionesProfesionales { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OficiosYaDbContext).Assembly);
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Configuraciones opcionales de Fluent API
+            modelBuilder.Entity<Usuario>(entity =>
+            {
+                entity.HasKey(u => u.Id);
+                entity.Property(u => u.Email).IsRequired().HasMaxLength(150);
+                entity.HasIndex(u => u.Email).IsUnique();
+            });
+
+            modelBuilder.Entity<Cliente>(entity =>
+            {
+                entity.HasKey(c => c.Id);
+                entity.Property(c => c.Nombre).IsRequired().HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Profesional>(entity =>
+            {
+                entity.HasKey(p => p.Id);
+                entity.Property(p => p.Nombre).IsRequired().HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<ProfesionalOficio>(entity =>
+            {
+                entity.HasKey(po => new { po.ProfesionalId, po.OficioId });
+
+                entity.HasOne(po => po.Profesional)
+                      .WithMany(p => p.ProfesionalesOficios)
+                      .HasForeignKey(po => po.ProfesionalId);
+
+                entity.HasOne(po => po.Oficio)
+                      .WithMany(o => o.ProfesionalesOficios)
+                      .HasForeignKey(po => po.OficioId);
+            });
+
+            // Agrega otras configuraciones necesarias para relaciones, longitudes y restricciones
+        }
     }
 }

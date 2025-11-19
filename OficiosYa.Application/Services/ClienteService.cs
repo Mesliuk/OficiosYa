@@ -1,4 +1,5 @@
-﻿using OficiosYa.Domain.Entities;
+﻿using OficiosYa.Application.DTOs;
+using OficiosYa.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,23 +10,7 @@ namespace OficiosYa.Application.Services
 {
     public class ClienteService
     {
-        private readonly IUsuarioRepository _repo;
-
-        public ClienteService(IUsuarioRepository repo)
-        {
-            _repo = repo;
-        }
-
-        public async Task<Guid> Ejecutar(string nombre, string email, string password)
-        {
-            var existe = await _repo.GetByEmailAsync(email);
-            if (existe != null) throw new Exception("Ya existe un usuario con ese email.");
-
-            var usuario = new Usuario(nombre, email, password);
-            await _repo.AddAsync(usuario);
-
-            return usuario.Id;
-        }
+        public Task<Cliente?> ObtenerPorUsuarioAsync(int usuarioId) => Task.FromResult<Cliente?>(null);
     }
 
 }

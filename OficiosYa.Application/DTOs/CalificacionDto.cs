@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace OficiosYa.Application.DTOs
 {
-    internal class CalificacionDto
+    public class CalificacionDto
     {
+        public int EmisorId { get; set; }
+        public int ReceptorId { get; set; }
+        public int Puntaje { get; set; }
+        public string? Comentario { get; set; }
     }
 }

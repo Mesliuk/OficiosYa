@@ -9,6 +9,7 @@
 <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.11" PrivateAssets="all" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
 
 </ItemGroup>
 
@@ -16,6 +17,11 @@
   <ItemGroup>
     <ProjectReference Include="..\OficiosYa.Application\OficiosYa.Application.csproj" />
     <ProjectReference Include="..\OficiosYa.Infrastructure\OficiosYa.Infrastructure.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Endpoints\" />
   </ItemGroup>
 
 </Project>

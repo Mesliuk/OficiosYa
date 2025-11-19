@@ -9,11 +9,7 @@ namespace OficiosYa.Domain.Entities;
 public class Oficio
 {
     public int Id { get; set; }
-
-    public string Nombre { get; set; } = string.Empty;
-    public string? Descripcion { get; set; }
-    public string? IconoUrl { get; set; }
-
-    public ICollection<TrabajadorOficio> Trabajadores { get; set; } = new List<TrabajadorOficio>();
+    public string Nombre { get; set; } = null!;
+    public string Descripcion { get; set; } = null!;
+    public ICollection<ProfesionalOficio>? Profesionales { get; set; }
 }
-

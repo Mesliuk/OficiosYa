@@ -16,6 +16,7 @@
 </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OficiosYa.Application\OficiosYa.Application.csproj" />
     <ProjectReference Include="..\OficiosYa.Domain\OficiosYa.Domain.csproj" />
   </ItemGroup>
 

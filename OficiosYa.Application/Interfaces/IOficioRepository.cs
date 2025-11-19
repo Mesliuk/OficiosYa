@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace OficiosYa.Application.Interfaces
 {
-    internal class IOficioRepository
+    public interface IOficioRepository
     {
+        Task<IEnumerable<Oficio>> GetAllAsync();
     }
 }

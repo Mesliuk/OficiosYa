@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace OficiosYa.Application.Services
 {
-    internal class PasswordResetService
+    public class PasswordResetService
     {
+        public Task<string> GenerarTokenAsync(int usuarioId) => Task.FromResult("");
+        public Task<bool> ValidarTokenAsync(string token) => Task.FromResult(false);
+        public Task<bool> ResetearPasswordAsync(string token, string nuevoPassword) => Task.FromResult(false);
     }
 }

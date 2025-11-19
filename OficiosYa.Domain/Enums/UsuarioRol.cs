@@ -5,22 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OficiosYa.Domain.Enums;
-
-public class UsuarioRol
+namespace OficiosYa.Domain.Enums
 {
-    public int Id { get; set; }
-
-    public int UsuarioId { get; set; }
-    public Usuario Usuario { get; set; } = null!;
-
-    public RolUsuario Rol { get; set; }
-}
-
-public enum RolUsuario
-{
-    Cliente = 1,
-    Trabajador = 2,
-    Admin = 3
+    public enum UsuarioRol { Cliente, Profesional }
 }
 

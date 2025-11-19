@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace OficiosYa.Domain.Common
 {
-    internal class BaseEntity
-    {
+    public abstract class BaseEntity { 
     }
+    
+    
 }

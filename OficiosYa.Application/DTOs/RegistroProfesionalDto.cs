@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace OficiosYa.Application.DTOs
 {
-    internal class RegistroProfesionalDto
+    public class RegistroProfesionalDto
     {
+        public string Nombre { get; set; } = null!;
+        public string Apellido { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string Telefono { get; set; } = null!;
+        public string Password { get; set; } = null!;
+        public string Documento { get; set; } = null!;
+        public string Bio { get; set; } = "";
+        public List<int> OficiosIds { get; set; } = new();
     }
 }

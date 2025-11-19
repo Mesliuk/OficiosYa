@@ -1,83 +1,101 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using OficiosYa.Api.Models;
+using OficiosYa.Application.Commands.Usuarios;
+using OficiosYa.Application.Handlers.Usuarios;
+using MyLoginRequest = OficiosYa.Api.Models.LoginRequest;
+using MyResetPasswordRequest = OficiosYa.Api.Models.ResetPasswordRequest;
 
 namespace OficiosYa.Api.Controllers
 {
-    public class AuthController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AuthController : ControllerBase
     {
-        // GET: AuthController
-        public ActionResult Index()
+        private readonly RegisterClienteHandler _registerClienteHandler;
+        private readonly RegisterProfesionalHandler _registerProfesionalHandler;
+        private readonly LoginUsuarioHandler _loginUsuarioHandler;
+        private readonly ResetPasswordHandler _resetPasswordHandler;
+
+        public AuthController(
+            RegisterClienteHandler registerClienteHandler,
+            RegisterProfesionalHandler registerProfesionalHandler,
+            LoginUsuarioHandler loginUsuarioHandler,
+            ResetPasswordHandler resetPasswordHandler)
         {
-            return View();
+            _registerClienteHandler = registerClienteHandler;
+            _registerProfesionalHandler = registerProfesionalHandler;
+            _loginUsuarioHandler = loginUsuarioHandler;
+            _resetPasswordHandler = resetPasswordHandler;
         }
 
-        // GET: AuthController/Details/5
-        public ActionResult Details(int id)
+        // =====================
+        // REGISTRO CLIENTE
+        // =====================
+        [HttpPost("registrar/cliente")]
+        public async Task<IActionResult> RegistrarCliente(RegisterClienteRequest request)
         {
-            return View();
+            var command = new RegistrarClienteCommand(
+                request.Nombre,
+                request.Apellido,
+                request.Correo,
+                request.Password,
+                request.Telefono
+            );
+
+            var result = await _registerClienteHandler.HandleAsync(command);
+            return Ok(result);
         }
 
-        // GET: AuthController/Create
-        public ActionResult Create()
+        // =====================
+        // REGISTRO PROFESIONAL
+        // =====================
+        [HttpPost("registrar/profesional")]
+        public async Task<IActionResult> RegistrarProfesional(RegisterProfesionalRequest request)
         {
-            return View();
+            var command = new RegistrarProfesionalCommand(
+                request.Nombre,
+                request.Apellido,
+                request.Correo,
+                request.Password,
+                request.Telefono,
+                request.OficioId
+               
+            );
+
+            var result = await _registerProfesionalHandler.HandleAsync(command);
+            return Ok(result);
         }
 
-        // POST: AuthController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        // =====================
+        // LOGIN
+        // =====================
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(MyLoginRequest request)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var command = new LoginCommand(request.Correo, request.Password);
+            var result = await _loginUsuarioHandler.HandleAsync(command);
+
+            if (result == null)
+                return Unauthorized("Credenciales inválidas");
+
+            return Ok(result);
         }
 
-        // GET: AuthController/Edit/5
-        public ActionResult Edit(int id)
+        // =====================
+        // RECUPERAR CONTRASEÑA
+        // =====================
+        [HttpPost("password/recover")]
+        public async Task<IActionResult> Recuperar(MyResetPasswordRequest request)
         {
-            return View();
-        }
-
-        // POST: AuthController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AuthController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AuthController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var command = new ResetPasswordCommand(
+                request.Correo,
+                request.Codigo,
+                request.NuevaPassword
+                );
+            var result = await _resetPasswordHandler.HandleAsync(command);
+            return Ok(result);
         }
     }
 }
+
