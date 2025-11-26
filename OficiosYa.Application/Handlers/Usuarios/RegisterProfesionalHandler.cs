@@ -39,7 +39,8 @@ namespace OficiosYa.Application.Handlers.Usuarios
                 Email = command.Correo,
                 Telefono = command.Telefono,
                 PasswordHash = PasswordHasher.Hash(command.Password),
-                Rol = UsuarioRol.Profesional
+                Rol = UsuarioRoleEnum.Profesional,
+                FotoPerfil = command.FotoPerfil
             };
 
 
@@ -67,7 +68,8 @@ namespace OficiosYa.Application.Handlers.Usuarios
                 Apellido = usuario.Apellido,
                 Email = usuario.Email,
                 Telefono = usuario.Telefono,
-                Rol = usuario.Rol.ToString()
+                Rol = usuario.Rol.ToString(),
+                FotoPerfil = usuario.FotoPerfil
             };
         }
     }

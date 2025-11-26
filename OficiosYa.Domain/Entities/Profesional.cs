@@ -14,10 +14,9 @@ namespace OficiosYa.Domain.Entities
         public bool Verificado { get; set; }
         public double RatingPromedio { get; set; }
         public int TotalCalificaciones { get; set; }
-
-
         public Usuario Usuario { get; set; } = null!;
-        public ICollection<ProfesionalOficio>? Oficios { get; set; }
-        public ICollection<Calificacion>? CalificacionesRecibidas { get; set; }
+        public ICollection<ProfesionalOficio> ProfesionalesOficios { get; set; } = new List<ProfesionalOficio>();
+        public ICollection<UbicacionProfesional> Ubicaciones { get; set; } = new List<UbicacionProfesional>();
+        public ICollection<ProfesionalOficio> Oficios { get; set; } = new List<ProfesionalOficio>();
     }
 }

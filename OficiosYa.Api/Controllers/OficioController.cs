@@ -1,83 +1,92 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using OficiosYa.Application.Handlers.Oficios;
+using OficiosYa.Domain.Entities;
 
 namespace OficiosYa.Api.Controllers
 {
-    public class OficioController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class OficioController : ControllerBase
     {
-        // GET: OficioController
-        public ActionResult Index()
+        private readonly GetAllOficiosHandler _getAllHandler;
+        private readonly CreateOficioHandler _createHandler;
+        private readonly UpdateOficioHandler _updateHandler;
+        private readonly DeleteOficioHandler _deleteHandler;
+
+        public OficioController(
+            GetAllOficiosHandler getAllHandler,
+            CreateOficioHandler createHandler,
+            UpdateOficioHandler updateHandler,
+            DeleteOficioHandler deleteHandler)
         {
-            return View();
+            _getAllHandler = getAllHandler;
+            _createHandler = createHandler;
+            _updateHandler = updateHandler;
+            _deleteHandler = deleteHandler;
         }
 
-        // GET: OficioController/Details/5
-        public ActionResult Details(int id)
+        // GET api/oficio
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            return View();
+            var result = await _getAllHandler.HandleAsync();
+            return Ok(result);
         }
 
-        // GET: OficioController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: OficioController/Create
+        // POST api/oficio
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create([FromBody] CreateOficioRequest request)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var oficio = await _createHandler.HandleAsync(request.Nombre, request.Descripcion);
+
+            return CreatedAtAction(nameof(GetAll), new { id = oficio.Id }, oficio);
         }
 
-        // GET: OficioController/Edit/5
-        public ActionResult Edit(int id)
+        // PUT api/oficio/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateOficioRequest request)
         {
-            return View();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var updated = await _updateHandler.HandleAsync(id, request.Nombre, request.Descripcion);
+
+            if (!updated)
+                return NotFound(new { message = "Oficio no encontrado" });
+
+            return NoContent();
         }
 
-        // POST: OficioController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // DELETE api/oficio/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            var deleted = await _deleteHandler.HandleAsync(id);
 
-        // GET: OficioController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+            if (!deleted)
+                return NotFound(new { message = "Oficio no encontrado" });
 
-        // POST: OficioController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return NoContent();
         }
     }
+
+    // -----------------------
+    // Request Models
+    // -----------------------
+
+    public class CreateOficioRequest
+    {
+        public string Nombre { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+    }
+
+    public class UpdateOficioRequest
+    {
+        public string Nombre { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
+    }
 }
+

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OficiosYa.Api.Models;
 using OficiosYa.Application.Commands.Calificaciones;
+using OficiosYa.Application.DTOs;
 using OficiosYa.Application.Handlers.Calificacion;
-
 
 namespace OficiosYa.Api.Controllers
 {
@@ -18,28 +18,44 @@ namespace OficiosYa.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrearCalificacion(CalificacionRequest request)
+        public async Task<IActionResult> CrearCalificacion([FromBody] CalificacionRequest request)
         {
-            var command = new CrearCalificacionCommand
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
             {
-                UsuarioCalificaId = request.EmisorId,
-                UsuarioCalificadoId = request.ReceptorId,
-                Puntaje = request.Puntaje,
-                Comentario = request.Comentario
-            };
+                var command = new CrearCalificacionCommand
+                {
+                    UsuarioCalificaId = request.EmisorId,
+                    UsuarioCalificadoId = request.ReceptorId,
+                    Puntaje = request.Puntaje,
+                    Comentario = request.Comentario
+                };
 
-            await _registrarCalificacionHandler.HandleAsync(command);
+                await _registrarCalificacionHandler.HandleAsync(command);
 
-            var dto = new OficiosYa.Application.DTOs.CalificacionDto
+                var dto = new CalificacionDto
+                {
+                    EmisorId = command.UsuarioCalificaId,
+                    ReceptorId = command.UsuarioCalificadoId,
+                    Puntaje = command.Puntaje,
+                    Comentario = command.Comentario
+                };
+
+                return Ok(dto);
+            }
+            catch (Exception ex)
             {
-                EmisorId = command.UsuarioCalificaId,
-                ReceptorId = command.UsuarioCalificadoId,
-                Puntaje = command.Puntaje,
-                Comentario = command.Comentario
-            };
-
-            return Ok(dto);
+                // Podés crear un middleware de errores si querés
+                return StatusCode(500, new
+                {
+                    Message = "Ocurrió un error al registrar la calificación.",
+                    Detail = ex.Message
+                });
+            }
         }
     }
 }
+
 

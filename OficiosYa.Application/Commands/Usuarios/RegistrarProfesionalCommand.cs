@@ -17,6 +17,7 @@ namespace OficiosYa.Application.Commands.Usuarios
         public string Bio { get; set; } = string.Empty;
         public int OficioId { get; set; }
 
+        public string? FotoPerfil { get; set; }
         public RegistrarProfesionalCommand(
             string nombre,
             string apellido,
@@ -25,7 +26,8 @@ namespace OficiosYa.Application.Commands.Usuarios
             string password,
             string documento,
             string bio,
-            int oficioId)
+            int oficioId,
+            string? fotoPerfil = null)
         {
             Nombre = nombre;
             Apellido = apellido;
@@ -35,6 +37,7 @@ namespace OficiosYa.Application.Commands.Usuarios
             Documento = documento;
             Bio = bio;
             OficioId = oficioId;
+            FotoPerfil = fotoPerfil;
         }
     }
 }

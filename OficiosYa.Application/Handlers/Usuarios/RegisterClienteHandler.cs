@@ -35,7 +35,8 @@
                 Email = command.Correo,
                 Telefono = command.Telefono,
                 PasswordHash = PasswordHasher.Hash(command.Password),
-                Rol = UsuarioRol.Cliente
+                Rol = UsuarioRoleEnum.Cliente,
+                FotoPerfil = command.FotoPerfil
             };
 
 
@@ -55,7 +56,8 @@
                 Apellido = usuario.Apellido,
                 Email = usuario.Email,
                 Telefono = usuario.Telefono,
-                Rol = usuario.Rol.ToString()
+                Rol = usuario.Rol.ToString(),
+                FotoPerfil = usuario.FotoPerfil
             };
         }
     }

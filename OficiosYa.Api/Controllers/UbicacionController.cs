@@ -1,83 +1,40 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OficiosYa.Application.Handlers.Ubicacion;
+using OficiosYa.Application.DTOs;
 
 namespace OficiosYa.Api.Controllers
 {
-    public class UbicacionController : Controller
+
+namespace OficiosYa.Api.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UbicacionController : ControllerBase
     {
-        // GET: UbicacionController
-        public ActionResult Index()
+        private readonly RegisterUbicacionHandler _registerHandler;
+        private readonly GetUbicacionHandler _getHandler;
+
+        public UbicacionController(RegisterUbicacionHandler registerHandler, GetUbicacionHandler getHandler)
         {
-            return View();
+            _registerHandler = registerHandler;
+            _getHandler = getHandler;
         }
 
-        // GET: UbicacionController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: UbicacionController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UbicacionController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Registrar([FromBody] UbicacionProfesionalDto dto)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _registerHandler.HandleAsync(dto);
+            return Ok();
         }
 
-        // GET: UbicacionController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpGet("{profesionalId}")]
+        public async Task<IActionResult> GetByProfesional(int profesionalId)
         {
-            return View();
-        }
-
-        // POST: UbicacionController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UbicacionController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UbicacionController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var ubicacion = await _getHandler.HandleAsync(profesionalId);
+            if (ubicacion == null) return NotFound();
+            return Ok(ubicacion);
         }
     }
+}
 }

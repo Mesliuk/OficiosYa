@@ -40,7 +40,8 @@ namespace OficiosYa.Api.Controllers
                 request.Apellido,
                 request.Correo,
                 request.Password,
-                request.Telefono
+                request.Telefono,
+                request.FotoPerfil
             );
 
             var result = await _registerClienteHandler.HandleAsync(command);
@@ -61,7 +62,8 @@ namespace OficiosYa.Api.Controllers
                 request.Password,
                 request.Documento,
                 request.Descripcion, // Bio
-                request.OficioId
+                request.OficioId,
+                request.FotoPerfil
             );
 
             var result = await _registerProfesionalHandler.HandleAsync(command);

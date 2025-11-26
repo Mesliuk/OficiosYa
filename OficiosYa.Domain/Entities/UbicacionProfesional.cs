@@ -13,8 +13,6 @@ public class UbicacionProfesional
     public double Latitud { get; set; }
     public double Longitud { get; set; }
     public DateTime UltimaActualizacion { get; set; } = DateTime.UtcNow;
-
-
     public Profesional Profesional { get; set; } = null!;
 }
 
