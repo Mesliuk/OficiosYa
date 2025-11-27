@@ -19,11 +19,9 @@ public class UbicacionProfesionalConfiguration : IEntityTypeConfiguration<Ubicac
         builder.HasKey(x => x.Id);
 
         builder.HasOne(x => x.Profesional)
-            .WithOne() // Assuming 1-to-1 or 1-to-many without nav back? 
-                       // Profesional entity doesn't have Ubicacion property explicitly in my view earlier?
-                       // Wait, Profesional.cs (Step 134) didn't show Ubicacion.
-                       // But UbicacionProfesional has ProfesionalId.
-            .HasForeignKey<UbicacionProfesional>(x => x.ProfesionalId);
+            .WithMany(p => p.Ubicaciones) // <-- corregido: 1 profesional puede tener muchas ubicaciones
+            .HasForeignKey(x => x.ProfesionalId)
+            .IsRequired();
     }
 }
 

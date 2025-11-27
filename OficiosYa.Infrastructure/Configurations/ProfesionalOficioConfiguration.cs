@@ -9,7 +9,7 @@ public class ProfesionalOficioConfiguration : IEntityTypeConfiguration<Profesion
         builder.HasKey(po => po.Id);
 
         builder.HasOne(po => po.Profesional)
-               .WithMany(p => p.ProfesionalesOficios)
+               .WithMany(p => p.Oficios)
                .HasForeignKey(po => po.ProfesionalId);
 
         builder.HasOne(po => po.Oficio)

@@ -22,7 +22,7 @@ namespace OficiosYa.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Busca configuraciones de IEntityTypeConfiguration<T> en el ensamblado
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(OficiosYaDbContext).Assembly);
+            ModelBuilder modelBuilder1 = modelBuilder.ApplyConfigurationsFromAssembly(typeof(OficiosYaDbContext).Assembly);
 
             // Ejemplo de configuración por si no tenés archivo específico:
             // modelBuilder.Entity<ProfesionalOficio>()

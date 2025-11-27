@@ -30,7 +30,7 @@ namespace OficiosYa.Application.Handlers.Oficios
                 throw new InvalidOperationException($"Oficio con id {oficioId} no encontrado.");
 
             // 3. Verificar si ya está asignado
-            if (profesional.ProfesionalesOficios.Any(po => po.OficioId == oficioId))
+            if (profesional.Oficios.Any(po => po.OficioId == oficioId))
                 throw new InvalidOperationException("El oficio ya está asignado al profesional.");
 
             // 4. Agregar relación
@@ -40,7 +40,7 @@ namespace OficiosYa.Application.Handlers.Oficios
                 OficioId = oficioId
             };
 
-            profesional.ProfesionalesOficios.Add(profOficio);
+            profesional.Oficios.Add(profOficio);
 
             // 5. Guardar cambios mediante el repositorio (unit of work dentro del repo)
             await _profRepo.UpdateAsync(profesional);

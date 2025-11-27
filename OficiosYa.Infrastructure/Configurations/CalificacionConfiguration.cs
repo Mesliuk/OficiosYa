@@ -18,12 +18,19 @@ public class CalificacionConfiguration : IEntityTypeConfiguration<Calificacion>
 
         builder.HasKey(x => x.Id);
 
-        builder.HasOne(x => x.UsuarioCalifica)
-            .WithMany()
-            .HasForeignKey(x => x.UsuarioCalificaId);
+        // Map Emisor/Receptor navigations to the EmisorId/ReceptorId foreign keys
+        builder.HasOne(x => x.Emisor)
+            .WithMany(u => u.CalificacionesEmitidas)
+            .HasForeignKey(x => x.EmisorId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(x => x.UsuarioCalificado)
-            .WithMany()
-            .HasForeignKey(x => x.UsuarioCalificadoId);
+        builder.HasOne(x => x.Receptor)
+            .WithMany(u => u.CalificacionesRecibidas)
+            .HasForeignKey(x => x.ReceptorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // If there are duplicate properties like UsuarioCalifica/UsuarioCalificado in the entity,
+        // they should be removed from the entity to avoid ambiguity. The configuration above
+        // matches the current DTOs and repositories that use EmisorId/ReceptorId.
     }
 }

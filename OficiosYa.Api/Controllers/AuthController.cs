@@ -39,8 +39,8 @@ namespace OficiosYa.Api.Controllers
                 request.Nombre,
                 request.Apellido,
                 request.Correo,
-                request.Password,
                 request.Telefono,
+                request.Password,
                 request.FotoPerfil
             );
 
