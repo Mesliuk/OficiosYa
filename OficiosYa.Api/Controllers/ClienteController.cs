@@ -31,8 +31,8 @@ namespace OficiosYa.Api.Controllers
                 cliente.Usuario.Nombre,
                 cliente.Usuario.Apellido,
                 cliente.Usuario.Telefono,
-                cliente.Usuario.Email,
-                cliente.Usuario.Id
+                cliente.Usuario.Email
+              
             });
         }
 
