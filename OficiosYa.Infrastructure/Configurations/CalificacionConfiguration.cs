@@ -18,12 +18,12 @@ public class CalificacionConfiguration : IEntityTypeConfiguration<Calificacion>
 
         builder.HasKey(x => x.Id);
 
-        builder.HasOne(x => x.UsuarioCalifica)
+        builder.HasOne(x => x.Emisor)
             .WithMany()
-            .HasForeignKey(x => x.UsuarioCalificaId);
+            .HasForeignKey(x => x.ReceptorId);
 
-        builder.HasOne(x => x.UsuarioCalificado)
+        builder.HasOne(x => x.Receptor)
             .WithMany()
-            .HasForeignKey(x => x.UsuarioCalificadoId);
+            .HasForeignKey(x => x.ReceptorId);
     }
 }
