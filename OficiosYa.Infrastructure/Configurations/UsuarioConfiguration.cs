@@ -22,9 +22,9 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
         builder.Property(x => x.Apellido).IsRequired().HasMaxLength(100);
         builder.Property(x => x.Email).IsRequired().HasMaxLength(150);
 
-        builder.HasMany(x => x.Roles)
-            .WithOne(x => x.Usuario)
-            .HasForeignKey(x => x.UsuarioId);
+        // Corregido: Usuario.Rol es una propiedad de tipo UsuarioRol, no una colección
+        builder.Property(x => x.Rol)
+            .IsRequired();
     }
 }
 
