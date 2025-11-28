@@ -20,6 +20,8 @@ namespace OficiosYa.Infrastructure.Persistence
         public DbSet<UbicacionProfesional> UbicacionesProfesionales { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(System.Reflection.Assembly.GetExecutingAssembly());
