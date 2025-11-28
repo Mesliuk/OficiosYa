@@ -23,7 +23,7 @@ namespace OficiosYa.Infrastructure.Repositories
         {
             return await _context.Clientes
                 .Include(c => c.Usuario)
-                .FirstOrDefaultAsync(c => c.UsuarioId == usuarioId);
+                .FirstOrDefaultAsync(c => c.Id == usuarioId);
         }
 
         public async Task ActualizarAsync(Cliente cliente)
