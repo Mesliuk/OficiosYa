@@ -23,6 +23,15 @@ namespace OficiosYa.Infrastructure.Repositories
                 .FirstOrDefaultAsync(p => p.Usuario.Id == usuarioId);
         }
 
+        public async Task<Profesional?> ObtenerPorIdAsync(int id)
+        {
+            return await _context.Profesionales
+                .Include(p => p.Usuario)
+                .Include(p => p.Oficios)
+                    .ThenInclude(po => po.Oficio)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
         public async Task<IEnumerable<Profesional>> BuscarPorFiltrosAsync(string? oficio, double? lat, double? lng, double? maxDist, int? minimoRating)
         {
             var query = _context.Profesionales

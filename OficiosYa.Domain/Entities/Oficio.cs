@@ -11,5 +11,5 @@ public class Oficio
     public int Id { get; set; }
     public string Nombre { get; set; } = null!;
     public string Descripcion { get; set; } = null!;
-    public ICollection<ProfesionalOficio>? Profesionales { get; set; }
+    public ICollection<ProfesionalOficio> Profesionales { get; set; } = new List<ProfesionalOficio>();
 }

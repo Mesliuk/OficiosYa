@@ -1,83 +1,78 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OficiosYa.Application.Handlers.Profesional;
+using OficiosYa.Domain.Entities;
 
 namespace OficiosYa.Api.Controllers
 {
-    public class ProfesionalController : Controller
+
+
+namespace OficiosYa.Api.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ProfesionalController : ControllerBase
     {
-        // GET: ProfesionalController
-        public ActionResult Index()
+        private readonly GetProfesionalByIdHandler _getHandler;
+        private readonly UpdateProfesionalHandler _updateHandler;
+        private readonly SearchProfesionalHandler _searchHandler;
+
+        public ProfesionalController(
+            GetProfesionalByIdHandler getHandler,
+            UpdateProfesionalHandler updateHandler,
+            SearchProfesionalHandler searchHandler)
         {
-            return View();
+            _getHandler = getHandler;
+            _updateHandler = updateHandler;
+            _searchHandler = searchHandler;
         }
 
-        // GET: ProfesionalController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet("{usuarioId}")]
+        public async Task<IActionResult> GetByUsuarioId(int usuarioId)
         {
-            return View();
+            var profesional = await _getHandler.HandleAsync(usuarioId);
+            if (profesional == null) return NotFound();
+            return Ok(profesional);
         }
 
-        // GET: ProfesionalController/Create
-        public ActionResult Create()
+        [HttpPut("{usuarioId}")]
+        public async Task<IActionResult> Update(int usuarioId, [FromBody] UpdateProfesionalRequest request)
         {
-            return View();
-        }
+            var profesional = await _getHandler.HandleAsync(usuarioId);
+            if (profesional == null) return NotFound();
 
-        // POST: ProfesionalController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+            // Update fields
+            profesional.Bio = request.Bio;
+            profesional.Documento = request.Documento;
+            // Update Usuario fields if needed, e.g. FotoPerfil
+            if (profesional.Usuario != null)
             {
-                return RedirectToAction(nameof(Index));
+                profesional.Usuario.Nombre = request.Nombre;
+                profesional.Usuario.Apellido = request.Apellido;
+                profesional.Usuario.Telefono = request.Telefono;
+                profesional.Usuario.FotoPerfil = request.FotoPerfil;
             }
-            catch
-            {
-                return View();
-            }
+
+            await _updateHandler.HandleAsync(profesional);
+            return NoContent();
         }
 
-        // GET: ProfesionalController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] string? oficio, [FromQuery] double? lat, [FromQuery] double? lng, [FromQuery] double? maxDist, [FromQuery] int? minimoRating)
         {
-            return View();
-        }
-
-        // POST: ProfesionalController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ProfesionalController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ProfesionalController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var resultados = await _searchHandler.HandleAsync(oficio, lat, lng, maxDist, minimoRating);
+            return Ok(resultados);
         }
     }
+
+    public class UpdateProfesionalRequest
+    {
+        public string Nombre { get; set; } = string.Empty;
+        public string Apellido { get; set; } = string.Empty;
+        public string Telefono { get; set; } = string.Empty;
+        public string Bio { get; set; } = string.Empty;
+        public string Documento { get; set; } = string.Empty;
+        public string? FotoPerfil { get; set; }
+    }
+}
 }

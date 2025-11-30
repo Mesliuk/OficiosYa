@@ -14,13 +14,15 @@ namespace OficiosYa.Application.Commands.Usuarios
         public string Telefono { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
 
-        public RegistrarClienteCommand(string nombre, string apellido, string correo, string telefono, string password)
+        public string? FotoPerfil { get; set; }
+        public RegistrarClienteCommand(string nombre, string apellido, string correo, string telefono, string password, string? fotoPerfil = null)
         {
             Nombre = nombre;
             Apellido = apellido;
             Correo = correo;
             Telefono = telefono;
             Password = password;
+            FotoPerfil = fotoPerfil;
         }
     }
 }

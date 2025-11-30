@@ -49,6 +49,7 @@ namespace OficiosYa.Api.Controllers
                 cliente.Usuario.Nombre = request.Nombre;
                 cliente.Usuario.Apellido = request.Apellido;
                 cliente.Usuario.Telefono = request.Telefono;
+                cliente.Usuario.FotoPerfil = request.FotoPerfil;
             }
 
             // Call handler
@@ -62,5 +63,6 @@ namespace OficiosYa.Api.Controllers
         public string Nombre { get; set; } = string.Empty;
         public string Apellido { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;
+        public string? FotoPerfil { get; set; }
     }
 }

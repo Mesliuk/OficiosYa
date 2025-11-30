@@ -7,6 +7,7 @@
         public string Correo { get; set; } = string.Empty;   // o 'Correo' si prefieres
         public string Telefono { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public string? FotoPerfil { get; set; }
     }
 }
 

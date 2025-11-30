@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OficiosYa.Domain.Entities; // Ajusta según el namespace de tus entidades
+using OficiosYa.Domain.Entities;
 
 namespace OficiosYa.Infrastructure.Persistence
 {
@@ -9,22 +9,29 @@ namespace OficiosYa.Infrastructure.Persistence
             : base(options)
         { }
 
-        // DbSets según tus entidades
-        public DbSet<Calificacion> Calificaciones { get; set; }
-        public DbSet<Cliente> Clientes { get; set; }
-        public DbSet<DireccionCliente> DireccionesClientes { get; set; }
-        public DbSet<Oficio> Oficios { get; set; }
-        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
-        public DbSet<Profesional> Profesionales { get; set; }
-        public DbSet<ProfesionalOficio> ProfesionalesOficios { get; set; }
-        public DbSet<UbicacionProfesional> UbicacionesProfesionales { get; set; }
-        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Calificacion> Calificaciones { get; set; } = null!;
+        public DbSet<Cliente> Clientes { get; set; } = null!;
+        public DbSet<DireccionCliente> DireccionesClientes { get; set; } = null!;
+        public DbSet<Oficio> Oficios { get; set; } = null!;
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; } = null!;
+        public DbSet<Profesional> Profesionales { get; set; } = null!;
+        public DbSet<ProfesionalOficio> ProfesionalesOficios { get; set; } = null!;
+        public DbSet<UbicacionProfesional> UbicacionesProfesionales { get; set; } = null!;
+        public DbSet<Usuario> Usuarios { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Busca configuraciones de IEntityTypeConfiguration<T> en el ensamblado
+            ModelBuilder modelBuilder1 = modelBuilder.ApplyConfigurationsFromAssembly(typeof(OficiosYaDbContext).Assembly);
+
+            // Ejemplo de configuración por si no tenés archivo específico:
+            // modelBuilder.Entity<ProfesionalOficio>()
+            //     .HasKey(pf => new { pf.ProfesionalId, pf.OficioId });
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.ApplyConfigurationsFromAssembly(System.Reflection.Assembly.GetExecutingAssembly());
         }
     }
 }
+

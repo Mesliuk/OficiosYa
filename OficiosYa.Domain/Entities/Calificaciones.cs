@@ -15,7 +15,7 @@ namespace OficiosYa.Domain.Entities
         public string? Comentario { get; set; }
         public DateTime Fecha { get; set; } = DateTime.UtcNow;
 
-
+        // Navigation properties
         public Usuario Emisor { get; set; } = null!;
         public Usuario Receptor { get; set; } = null!;
     }

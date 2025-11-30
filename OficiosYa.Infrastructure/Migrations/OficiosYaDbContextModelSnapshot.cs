@@ -45,19 +45,12 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Property<int?>("ProfesionalId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Puntaje")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ReceptorId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
-
                     b.HasIndex("EmisorId");
-
-                    b.HasIndex("ProfesionalId");
 
                     b.HasIndex("ReceptorId");
 
@@ -65,6 +58,24 @@ namespace OficiosYa.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("OficiosYa.Domain.Entities.Cliente", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Clientes", (string)null);
+                });
+
+            modelBuilder.Entity("OficiosYa.Domain.Entities.DireccionCliente", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,9 +118,14 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Property<double>("Longitud")
                         .HasColumnType("double precision");
 
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("DireccionesClientes", (string)null);
                 });
@@ -214,7 +230,7 @@ namespace OficiosYa.Infrastructure.Migrations
 
                     b.HasIndex("ProfesionalId");
 
-                    b.ToTable("ProfesionalesOficios", (string)null);
+                    b.ToTable("ProfesionalesOficios");
                 });
 
             modelBuilder.Entity("OficiosYa.Domain.Entities.UbicacionProfesional", b =>
@@ -239,8 +255,7 @@ namespace OficiosYa.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProfesionalId")
-                        .IsUnique();
+                    b.HasIndex("ProfesionalId");
 
                     b.ToTable("UbicacionesProfesionales", (string)null);
                 });
@@ -269,6 +284,9 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Property<DateTime>("FechaRegistro")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("FotoPerfil")
+                        .HasColumnType("text");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -290,26 +308,39 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.ToTable("Usuarios", (string)null);
                 });
 
+            modelBuilder.Entity("OficiosYa.Domain.Entities.UsuarioRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Rol")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("UsuarioRole");
+                });
+
             modelBuilder.Entity("OficiosYa.Domain.Entities.Calificacion", b =>
                 {
-                    b.HasOne("OficiosYa.Domain.Entities.Cliente", null)
-                        .WithMany("CalificacionesRecibidas")
-                        .HasForeignKey("ClienteId");
-
                     b.HasOne("OficiosYa.Domain.Entities.Usuario", "Emisor")
-                        .WithMany()
+                        .WithMany("CalificacionesEmitidas")
                         .HasForeignKey("EmisorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("OficiosYa.Domain.Entities.Profesional", null)
-                        .WithMany("CalificacionesRecibidas")
-                        .HasForeignKey("ProfesionalId");
-
                     b.HasOne("OficiosYa.Domain.Entities.Usuario", "Receptor")
-                        .WithMany()
+                        .WithMany("CalificacionesRecibidas")
                         .HasForeignKey("ReceptorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Emisor");
@@ -335,6 +366,10 @@ namespace OficiosYa.Infrastructure.Migrations
                         .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("OficiosYa.Domain.Entities.Usuario", null)
+                        .WithMany("Direcciones")
+                        .HasForeignKey("UsuarioId");
 
                     b.Navigation("Cliente");
                 });
@@ -383,18 +418,23 @@ namespace OficiosYa.Infrastructure.Migrations
             modelBuilder.Entity("OficiosYa.Domain.Entities.UbicacionProfesional", b =>
                 {
                     b.HasOne("OficiosYa.Domain.Entities.Profesional", "Profesional")
-                        .WithOne()
-                        .HasForeignKey("OficiosYa.Domain.Entities.UbicacionProfesional", "ProfesionalId")
+                        .WithMany("Ubicaciones")
+                        .HasForeignKey("ProfesionalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Profesional");
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.Cliente", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.UsuarioRole", b =>
                 {
                     b.Navigation("CalificacionesRecibidas");
 
+                    b.Navigation("Direcciones");
+                });
+
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Cliente", b =>
+                {
                     b.Navigation("Direcciones");
                 });
 
@@ -405,9 +445,20 @@ namespace OficiosYa.Infrastructure.Migrations
 
             modelBuilder.Entity("OficiosYa.Domain.Entities.Profesional", b =>
                 {
+                    b.Navigation("Oficios");
+
+                    b.Navigation("Ubicaciones");
+                });
+
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Usuario", b =>
+                {
+                    b.Navigation("CalificacionesEmitidas");
+
                     b.Navigation("CalificacionesRecibidas");
 
-                    b.Navigation("Oficios");
+                    b.Navigation("Direcciones");
+
+                    b.Navigation("Roles");
                 });
 #pragma warning restore 612, 618
         }
