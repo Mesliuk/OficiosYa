@@ -62,6 +62,9 @@ namespace OficiosYa.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("FotoPerfil")
+                        .HasColumnType("text");
+
                     b.Property<int>("UsuarioId")
                         .HasColumnType("integer");
 
@@ -80,12 +83,12 @@ namespace OficiosYa.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Alias")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("ClienteId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Direccion")
                         .IsRequired()
@@ -97,14 +100,9 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Property<double>("Longitud")
                         .HasColumnType("double precision");
 
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("DireccionesClientes", (string)null);
                 });
@@ -117,8 +115,12 @@ namespace OficiosYa.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Activo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Nombre")
@@ -126,7 +128,17 @@ namespace OficiosYa.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<bool>("RequiereLicencia")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("RubroId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RubroId");
 
                     b.ToTable("Oficios", (string)null);
                 });
@@ -164,12 +176,14 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Bio")
-                        .IsRequired()
+                    b.Property<string>("Descripcion")
                         .HasColumnType("text");
 
                     b.Property<string>("Documento")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FotoPerfil")
                         .HasColumnType("text");
 
                     b.Property<double>("RatingPromedio")
@@ -210,6 +224,31 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.HasIndex("ProfesionalId");
 
                     b.ToTable("ProfesionalesOficios");
+                });
+
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Rubro", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("Slug")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rubros", (string)null);
                 });
 
             modelBuilder.Entity("OficiosYa.Domain.Entities.UbicacionProfesional", b =>
@@ -264,7 +303,8 @@ namespace OficiosYa.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("FotoPerfil")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("FotoPerfil");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -346,11 +386,18 @@ namespace OficiosYa.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OficiosYa.Domain.Entities.Usuario", null)
-                        .WithMany("Direcciones")
-                        .HasForeignKey("UsuarioId");
-
                     b.Navigation("Cliente");
+                });
+
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Oficio", b =>
+                {
+                    b.HasOne("OficiosYa.Domain.Entities.Rubro", "Rubro")
+                        .WithMany("Oficios")
+                        .HasForeignKey("RubroId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Rubro");
                 });
 
             modelBuilder.Entity("OficiosYa.Domain.Entities.PasswordResetToken", b =>
@@ -433,13 +480,16 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Navigation("Ubicaciones");
                 });
 
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Rubro", b =>
+                {
+                    b.Navigation("Oficios");
+                });
+
             modelBuilder.Entity("OficiosYa.Domain.Entities.Usuario", b =>
                 {
                     b.Navigation("CalificacionesEmitidas");
 
                     b.Navigation("CalificacionesRecibidas");
-
-                    b.Navigation("Direcciones");
 
                     b.Navigation("Roles");
                 });

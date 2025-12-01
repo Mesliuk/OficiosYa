@@ -55,8 +55,6 @@ namespace OficiosYa.Infrastructure.Repositories
             // Filtro por Ubicación (Aproximación simple)
             if (lat.HasValue && lng.HasValue && maxDist.HasValue)
             {
-                // Nota: Esto es una aproximación muy básica. Para producción usar PostGIS.
-                // 1 grado lat ~= 111km. 
                 double deltaLat = maxDist.Value / 111.0;
                 double deltaLng = maxDist.Value / (111.0 * Math.Cos(lat.Value * Math.PI / 180.0));
 
@@ -65,13 +63,6 @@ namespace OficiosYa.Infrastructure.Repositories
                 var minLng = lng.Value - deltaLng;
                 var maxLng = lng.Value + deltaLng;
 
-                // Necesitamos unir con UbicacionProfesional
-                // Como no hay propiedad de navegación directa en Profesional hacia UbicacionProfesional (parece ser 1 a 1 o 1 a N pero no está en la entidad Profesional),
-                // haremos un join manual o subquery.
-                
-                // Revisando la entidad Profesional, no tiene propiedad Ubicacion.
-                // Revisando UbicacionProfesional, tiene ProfesionalId.
-                
                 var profesionalesConUbicacion = _context.UbicacionesProfesionales
                     .Where(u => u.Latitud >= minLat && u.Latitud <= maxLat && 
                                 u.Longitud >= minLng && u.Longitud <= maxLng)
@@ -93,6 +84,16 @@ namespace OficiosYa.Infrastructure.Repositories
         {
             _context.Profesionales.Update(profesional);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistsByDocumentoAsync(string documento, int? excludeProfesionalId = null)
+        {
+            var normalized = new string(documento.Where(char.IsDigit).ToArray());
+            var query = _context.Profesionales.AsQueryable();
+            if (excludeProfesionalId.HasValue)
+                query = query.Where(p => p.Id != excludeProfesionalId.Value);
+
+            return await query.AnyAsync(p => p.Documento != null && p.Documento.Replace("-", "").Replace(" ", "") == normalized);
         }
     }
 }

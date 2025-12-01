@@ -13,6 +13,7 @@ namespace OficiosYa.Infrastructure.Persistence
         public DbSet<Cliente> Clientes { get; set; } = null!;
         public DbSet<DireccionCliente> DireccionesClientes { get; set; } = null!;
         public DbSet<Oficio> Oficios { get; set; } = null!;
+        public DbSet<Rubro> Rubros { get; set; } = null!;
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; } = null!;
         public DbSet<Profesional> Profesionales { get; set; } = null!;
         public DbSet<ProfesionalOficio> ProfesionalesOficios { get; set; } = null!;
@@ -22,7 +23,7 @@ namespace OficiosYa.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Busca configuraciones de IEntityTypeConfiguration<T> en el ensamblado
-            ModelBuilder modelBuilder1 = modelBuilder.ApplyConfigurationsFromAssembly(typeof(OficiosYaDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(OficiosYaDbContext).Assembly);
 
             // Ejemplo de configuración por si no tenés archivo específico:
             // modelBuilder.Entity<ProfesionalOficio>()

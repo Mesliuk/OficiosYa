@@ -9,5 +9,6 @@ namespace OficiosYa.Application.Interfaces
         Task<IEnumerable<Profesional>> BuscarPorFiltrosAsync(string? oficio, double? lat, double? lng, double? maxDist, int? minimoRating);
         Task AgregarAsync(Profesional profesional);
         Task UpdateAsync(Profesional profesional);
+        Task<bool> ExistsByDocumentoAsync(string documento, int? excludeProfesionalId = null);
     }
 }

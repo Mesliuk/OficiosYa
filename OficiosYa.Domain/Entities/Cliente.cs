@@ -11,5 +11,8 @@
 
         // Direcciones del cliente
         public ICollection<DireccionCliente> Direcciones { get; set; } = new List<DireccionCliente>();
+
+        // Profile photo path stored per-client
+        public string? FotoPerfil { get; set; }
     }
 }

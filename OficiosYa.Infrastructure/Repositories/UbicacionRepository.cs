@@ -56,5 +56,15 @@ namespace OficiosYa.Infrastructure.Repositories
                 Longitud = ubicacion.Longitud
             };
         }
+
+        public async Task DeleteByProfesionalAsync(int profesionalId)
+        {
+            var ubicacion = await _context.UbicacionesProfesionales
+                .FirstOrDefaultAsync(u => u.ProfesionalId == profesionalId);
+            if (ubicacion == null) return;
+
+            _context.UbicacionesProfesionales.Remove(ubicacion);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace OficiosYa.Api.Controllers
 
             var dirs = cliente.Direcciones.Select(d => new {
                 d.Id,
-                d.Alias,
+                d.Descripcion,
                 d.Direccion,
                 d.Latitud,
                 d.Longitud
@@ -44,7 +44,7 @@ namespace OficiosYa.Api.Controllers
 
             var direccion = new DireccionCliente
             {
-                Alias = string.IsNullOrWhiteSpace(request.Alias) ? "Ubicación" : request.Alias,
+                Descripcion = string.IsNullOrWhiteSpace(request.Descripcion) ? "Ubicación" : request.Descripcion,
                 Direccion = request.Direccion,
                 Latitud = request.Latitud,
                 Longitud = request.Longitud,
@@ -67,7 +67,7 @@ namespace OficiosYa.Api.Controllers
             var direccion = cliente.Direcciones.FirstOrDefault(d => d.Id == direccionId);
             if (direccion == null) return NotFound();
 
-            direccion.Alias = request.Alias ?? direccion.Alias;
+            direccion.Descripcion = request.Descripcion ?? direccion.Descripcion;
             direccion.Direccion = request.Direccion ?? direccion.Direccion;
             direccion.Latitud = request.Latitud ?? direccion.Latitud;
             direccion.Longitud = request.Longitud ?? direccion.Longitud;
@@ -95,7 +95,7 @@ namespace OficiosYa.Api.Controllers
 
     public class CreateDireccionRequest
     {
-        public string Alias { get; set; } = "Ubicación";
+        public string Descripcion { get; set; } = "Ubicación";
         public string Direccion { get; set; } = string.Empty;
         public double Latitud { get; set; }
         public double Longitud { get; set; }
@@ -103,7 +103,7 @@ namespace OficiosYa.Api.Controllers
 
     public class UpdateDireccionRequest
     {
-        public string? Alias { get; set; }
+        public string? Descripcion { get; set; }
         public string? Direccion { get; set; }
         public double? Latitud { get; set; }
         public double? Longitud { get; set; }

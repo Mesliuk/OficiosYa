@@ -10,7 +10,7 @@ namespace OficiosYa.Domain.Entities
     {
         public int Id { get; set; }
         public int ClienteId { get; set; }
-        public string Alias { get; set; } = "Ubicación";
+        public string Descripcion { get; set; } = "Ubicación";
         public string Direccion { get; set; } = null!;
         public double Latitud { get; set; }
         public double Longitud { get; set; }

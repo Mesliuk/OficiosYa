@@ -18,7 +18,15 @@ public class OficioConfiguration : IEntityTypeConfiguration<Oficio>
 
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Nombre).HasMaxLength(100);
+        builder.Property(x => x.Nombre).HasMaxLength(100).IsRequired();
+        builder.Property(x => x.Descripcion).IsRequired(false);
+        builder.Property(x => x.RequiereLicencia).HasDefaultValue(false);
+        builder.Property(x => x.Activo).HasDefaultValue(true);
+
+        builder.HasOne(x => x.Rubro)
+            .WithMany(r => r.Oficios)
+            .HasForeignKey(x => x.RubroId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
 

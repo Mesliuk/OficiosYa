@@ -13,6 +13,7 @@ public class Usuario
     public string PasswordHash { get; set; } = null!;
     public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
     public bool Activo { get; set; } = true;
+    // Store profile photo as path/URL instead of binary
     public string? FotoPerfil { get; set; }
     public UsuarioRoleEnum Rol { get; set; }
     public ICollection<Calificacion> CalificacionesEmitidas { get; set; } = new List<Calificacion>();
@@ -20,6 +21,5 @@ public class Usuario
 
     // Added to match EF configurations/migrations
     public ICollection<UsuarioRole> Roles { get; set; } = new List<UsuarioRole>();
-    public ICollection<DireccionCliente> Direcciones { get; set; } = new List<DireccionCliente>();
 }
 

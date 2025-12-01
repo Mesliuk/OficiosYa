@@ -18,5 +18,12 @@ namespace OficiosYa.Application.Handlers.Oficios
         {
             return await _repository.ObtenerTodosAsync();
         }
+
+        public async Task<IEnumerable<Oficio>> HandleAsync(int? rubroId = null, string? search = null)
+        {
+            if (rubroId.HasValue) return await _repository.ObtenerPorRubroAsync(rubroId.Value);
+            if (!string.IsNullOrWhiteSpace(search)) return await _repository.BuscarAsync(search);
+            return await _repository.ObtenerTodosAsync();
+        }
     }
 }

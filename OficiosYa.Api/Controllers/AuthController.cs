@@ -1,10 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using OficiosYa.Api.Models;
 using OficiosYa.Application.Commands.Usuarios;
 using OficiosYa.Application.Handlers.Usuarios;
 using MyLoginRequest = OficiosYa.Api.Models.LoginRequest;
 using MyResetPasswordRequest = OficiosYa.Api.Models.ResetPasswordRequest;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace OficiosYa.Api.Controllers
 {
@@ -12,62 +17,18 @@ namespace OficiosYa.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly RegisterClienteHandler _registerClienteHandler;
-        private readonly RegisterProfesionalHandler _registerProfesionalHandler;
         private readonly LoginUsuarioHandler _loginUsuarioHandler;
         private readonly ResetPasswordHandler _resetPasswordHandler;
+        private readonly IConfiguration _config;
 
         public AuthController(
-            RegisterClienteHandler registerClienteHandler,
-            RegisterProfesionalHandler registerProfesionalHandler,
             LoginUsuarioHandler loginUsuarioHandler,
-            ResetPasswordHandler resetPasswordHandler)
+            ResetPasswordHandler resetPasswordHandler,
+            IConfiguration config)
         {
-            _registerClienteHandler = registerClienteHandler;
-            _registerProfesionalHandler = registerProfesionalHandler;
             _loginUsuarioHandler = loginUsuarioHandler;
             _resetPasswordHandler = resetPasswordHandler;
-        }
-
-        // =====================
-        // REGISTRO CLIENTE
-        // =====================
-        [HttpPost("registrar/cliente")]
-        public async Task<IActionResult> RegistrarCliente(RegisterClienteRequest request)
-        {
-            var command = new RegistrarClienteCommand(
-                request.Nombre,
-                request.Apellido,
-                request.Correo,
-                request.Telefono,
-                request.Password,
-                request.FotoPerfil
-            );
-
-            var result = await _registerClienteHandler.HandleAsync(command);
-            return Ok(result);
-        }
-
-        // =====================
-        // REGISTRO PROFESIONAL
-        // =====================
-        [HttpPost("registrar/profesional")]
-        public async Task<IActionResult> RegistrarProfesional(RegisterProfesionalRequest request)
-        {
-            var command = new RegistrarProfesionalCommand(
-                request.Nombre,
-                request.Apellido,
-                request.Correo,
-                request.Telefono,
-                request.Password,
-                request.Documento,
-                request.Descripcion, // Bio
-                request.OficioId,
-                request.FotoPerfil
-            );
-
-            var result = await _registerProfesionalHandler.HandleAsync(command);
-            return Ok(result);
+            _config = config;
         }
 
         // =====================
@@ -76,11 +37,37 @@ namespace OficiosYa.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(MyLoginRequest request)
         {
-            var command = new LoginCommand(request.Correo, request.Password);
+            var command = new LoginCommand(request.Correo, request.Password, request.Role);
             var result = await _loginUsuarioHandler.HandleAsync(command);
 
             if (result == null)
                 return Unauthorized("Credenciales inválidas");
+
+            // generar JWT y adjuntarlo al DTO
+            var jwt = _config.GetSection("Jwt");
+            var key = jwt.GetValue<string>("Key") ?? "default_dev_key_change_this";
+            var issuer = jwt.GetValue<string>("Issuer") ?? "OficiosYa";
+            var audience = jwt.GetValue<string>("Audience") ?? "OficiosYaAudience";
+            var expiresMinutes = jwt.GetValue<int?>("ExpiresMinutes") ?? 60;
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, result.Id.ToString()),
+                new Claim(ClaimTypes.Email, result.Email),
+                new Claim(ClaimTypes.Role, result.Rol)
+            };
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                issuer,
+                audience,
+                claims,
+                expires: DateTime.UtcNow.AddMinutes(expiresMinutes),
+                signingCredentials: creds
+            );
+
+            result.Token = new JwtSecurityTokenHandler().WriteToken(token);
 
             return Ok(result);
         }
