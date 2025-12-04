@@ -1,13 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OficiosYa.Application.Interfaces;
 using OficiosYa.Application.Services;
+using OficiosYa.Domain.Services;
 using OficiosYa.Infrastructure.Persistence;
 using OficiosYa.Infrastructure.Repositories;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opts =>
+    {
+        opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 builder.Services.AddOpenApi();
 
 // DbContext
@@ -63,6 +69,11 @@ builder.Services.AddScoped<OficiosYa.Application.Handlers.Oficios.DeleteOficioHa
 // Ubicacion
 builder.Services.AddScoped<OficiosYa.Application.Handlers.Ubicacion.RegisterUbicacionHandler>();
 builder.Services.AddScoped<OficiosYa.Application.Handlers.Ubicacion.GetUbicacionHandler>();
+
+//Servicio del dominio que calcula la distancia cercana a la ubicacion del cliente
+builder.Services.AddScoped<IGeoService, GeoService>();
+
+
 
 WebApplication app = builder.Build();
 

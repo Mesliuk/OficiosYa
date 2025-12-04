@@ -14,9 +14,9 @@ namespace OficiosYa.Application.Handlers.Profesional
             _repository = repository;
         }
 
-        public async Task<IEnumerable<OficiosYa.Domain.Entities.Profesional>> HandleAsync(string? oficio, double? lat, double? lng, double? maxDist, int? minimoRating)
+        public async Task<IEnumerable<OficiosYa.Domain.Entities.Profesional>> HandleAsync(string? oficio, int clienteId, double? maxDist, int? minimoRating)
         {
-            return await _repository.BuscarPorFiltrosAsync(oficio, lat, lng, maxDist, minimoRating);
+            return await _repository.BuscarPorFiltrosAsync(oficio, clienteId, maxDist, minimoRating);
         }
     }
 }

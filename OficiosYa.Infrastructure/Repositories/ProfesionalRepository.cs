@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OficiosYa.Application.Interfaces;
 using OficiosYa.Domain.Entities;
+using OficiosYa.Domain.Services;
 using OficiosYa.Infrastructure.Persistence;
 
 namespace OficiosYa.Infrastructure.Repositories
@@ -8,10 +9,12 @@ namespace OficiosYa.Infrastructure.Repositories
     public class ProfesionalRepository : IProfesionalRepository
     {
         private readonly OficiosYaDbContext _context;
+        private readonly IGeoService _geo;
 
-        public ProfesionalRepository(OficiosYaDbContext context)
+        public ProfesionalRepository(OficiosYaDbContext context, IGeoService geo)
         {
             _context = context;
+            _geo = geo;
         }
 
         public async Task<Profesional?> GetByUsuarioIdAsync(int usuarioId)
@@ -32,12 +35,25 @@ namespace OficiosYa.Infrastructure.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<IEnumerable<Profesional>> BuscarPorFiltrosAsync(string? oficio, double? lat, double? lng, double? maxDist, int? minimoRating)
+        public async Task<IEnumerable<Profesional>> BuscarPorFiltrosAsync(string? oficio, int clienteId, double? maxDist, int? minimoRating)
         {
+            // Obtener Ubicación 
+            var ubicacionCliente = await _context.DireccionesClientes
+                .FirstOrDefaultAsync(u => u.ClienteId == clienteId);
+
+            if(ubicacionCliente == null)
+            {
+                throw new Exception("No se encontró la ubicación del cliente.");
+            }
+
+            double latCliente = ubicacionCliente.Latitud;
+            double lonCliente = ubicacionCliente.Longitud;
+
             var query = _context.Profesionales
                 .Include(p => p.Usuario)
                 .Include(p => p.Oficios)
                     .ThenInclude(po => po.Oficio)
+                .Include(p => p.Ubicaciones)
                 .AsQueryable();
 
             // Filtro por Oficio
@@ -52,35 +68,32 @@ namespace OficiosYa.Infrastructure.Repositories
                 query = query.Where(p => p.RatingPromedio >= minimoRating.Value);
             }
 
-            // Filtro por Ubicación (Aproximación simple)
-            if (lat.HasValue && lng.HasValue && maxDist.HasValue)
+            var profesionales = await query.ToListAsync();
+
+            if(!maxDist.HasValue)
             {
-                // Nota: Esto es una aproximación muy básica. Para producción usar PostGIS.
-                // 1 grado lat ~= 111km. 
-                double deltaLat = maxDist.Value / 111.0;
-                double deltaLng = maxDist.Value / (111.0 * Math.Cos(lat.Value * Math.PI / 180.0));
-
-                var minLat = lat.Value - deltaLat;
-                var maxLat = lat.Value + deltaLat;
-                var minLng = lng.Value - deltaLng;
-                var maxLng = lng.Value + deltaLng;
-
-                // Necesitamos unir con UbicacionProfesional
-                // Como no hay propiedad de navegación directa en Profesional hacia UbicacionProfesional (parece ser 1 a 1 o 1 a N pero no está en la entidad Profesional),
-                // haremos un join manual o subquery.
-                
-                // Revisando la entidad Profesional, no tiene propiedad Ubicacion.
-                // Revisando UbicacionProfesional, tiene ProfesionalId.
-                
-                var profesionalesConUbicacion = _context.UbicacionesProfesionales
-                    .Where(u => u.Latitud >= minLat && u.Latitud <= maxLat && 
-                                u.Longitud >= minLng && u.Longitud <= maxLng)
-                    .Select(u => u.ProfesionalId);
-
-                query = query.Where(p => profesionalesConUbicacion.Contains(p.Id));
+                return profesionales;
             }
 
-            return await query.ToListAsync();
+            // Filtro por Distancia
+            var filtrados = profesionales.Where(p =>
+            {
+
+                var ultimaUbicacion = p.Ubicaciones?
+                .OrderByDescending(u => u.UltimaActualizacion)
+                .FirstOrDefault();
+
+                if (ultimaUbicacion == null) return false;
+
+                double distancia = _geo.CalcularDistancia(
+                    latCliente, lonCliente,
+                    ultimaUbicacion.Latitud,
+                    ultimaUbicacion.Longitud);
+
+                return distancia <= maxDist.Value;
+            }).ToList();
+            
+            return filtrados;
         }
 
         public async Task AgregarAsync(Profesional profesional)
@@ -94,5 +107,7 @@ namespace OficiosYa.Infrastructure.Repositories
             _context.Profesionales.Update(profesional);
             await _context.SaveChangesAsync();
         }
+
+        
     }
 }

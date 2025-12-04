@@ -58,9 +58,9 @@ namespace OficiosYa.Api.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromQuery] string? oficio, [FromQuery] double? lat, [FromQuery] double? lng, [FromQuery] double? maxDist, [FromQuery] int? minimoRating)
+        public async Task<IActionResult> Search([FromQuery] string? oficio, [FromQuery] int clienteId, [FromQuery] double? maxDist, [FromQuery] int? minimoRating)
         {
-            var resultados = await _searchHandler.HandleAsync(oficio, lat, lng, maxDist, minimoRating);
+            var resultados = await _searchHandler.HandleAsync(oficio, clienteId, maxDist, minimoRating);
             return Ok(resultados);
         }
     }

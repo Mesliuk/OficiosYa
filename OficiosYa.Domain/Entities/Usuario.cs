@@ -20,6 +20,6 @@ public class Usuario
 
     // Added to match EF configurations/migrations
     public ICollection<UsuarioRole> Roles { get; set; } = new List<UsuarioRole>();
-    public ICollection<DireccionCliente> Direcciones { get; set; } = new List<DireccionCliente>();
+    //public ICollection<DireccionCliente> Direcciones { get; set; } = new List<DireccionCliente>();
 }
 

@@ -25,13 +25,16 @@ namespace OficiosYa.Infrastructure.Persistence
             ModelBuilder modelBuilder1 = modelBuilder.ApplyConfigurationsFromAssembly(typeof(OficiosYaDbContext).Assembly);
 
             // Ejemplo de configuración por si no tenés archivo específico:
-            // modelBuilder.Entity<ProfesionalOficio>()
-            //     .HasKey(pf => new { pf.ProfesionalId, pf.OficioId });
+            modelBuilder.Entity<ProfesionalOficio>()
+                 .HasKey(pf => new { pf.ProfesionalId, pf.OficioId });
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<UbicacionProfesional>()
+                .HasOne(up => up.Profesional)
+                .WithMany(p => p.Ubicaciones)
+                .HasForeignKey(up => up.ProfesionalId);
+
         }
+    
     }
 }
 
