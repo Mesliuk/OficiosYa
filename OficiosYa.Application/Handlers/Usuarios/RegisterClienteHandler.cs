@@ -34,28 +34,16 @@
                 Telefono = dto.Telefono,
                 PasswordHash = PasswordHasher.Hash(dto.Password),
                 Rol = UsuarioRoleEnum.Cliente,
-                FotoPerfil = null
+                FotoPerfil = null,
+                Direccion = dto.Direccion ?? string.Empty,
+                Latitud = dto.Latitud ?? 0,
+                Longitud = dto.Longitud ?? 0
             };
 
             await _usuarioRepository.AgregarAsync(usuario);
 
             var cliente = new Cliente { Usuario = usuario, FotoPerfil = fotoPath };
             await _clienteRepository.AgregarAsync(cliente);
-
-            if (!string.IsNullOrEmpty(dto.Direccion) && dto.Latitud.HasValue && dto.Longitud.HasValue)
-            {
-                var direccion = new DireccionCliente
-                {
-                    Cliente = cliente,
-                    Descripcion = string.IsNullOrEmpty(dto.Descripcion) ? "Ubicación" : dto.Descripcion,
-                    Direccion = dto.Direccion,
-                    Latitud = dto.Latitud.Value,
-                    Longitud = dto.Longitud.Value
-                };
-
-                cliente.Direcciones.Add(direccion);
-                await _clienteRepository.ActualizarAsync(cliente);
-            }
 
             return new UsuarioDto
             {

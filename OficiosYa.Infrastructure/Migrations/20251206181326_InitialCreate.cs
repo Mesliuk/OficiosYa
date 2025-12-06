@@ -191,23 +191,22 @@ namespace OficiosYa.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DireccionesClientes",
+                name: "DireccionCliente",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ClienteId = table.Column<int>(type: "integer", nullable: false),
-                    Descripcion = table.Column<string>(type: "text", nullable: true),
-                    Direccion = table.Column<string>(type: "text", nullable: true),
+                    Direccion = table.Column<string>(type: "text", nullable: false),
                     Latitud = table.Column<double>(type: "double precision", nullable: false),
                     Longitud = table.Column<double>(type: "double precision", nullable: false),
-                    EsPrincipal = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
+                    EsPrincipal = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DireccionesClientes", x => x.Id);
+                    table.PrimaryKey("PK_DireccionCliente", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DireccionesClientes_Clientes_ClienteId",
+                        name: "FK_DireccionCliente_Clientes_ClienteId",
                         column: x => x.ClienteId,
                         principalTable: "Clientes",
                         principalColumn: "Id",
@@ -351,8 +350,8 @@ namespace OficiosYa.Infrastructure.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DireccionesClientes_ClienteId",
-                table: "DireccionesClientes",
+                name: "IX_DireccionCliente_ClienteId",
+                table: "DireccionCliente",
                 column: "ClienteId");
 
             migrationBuilder.CreateIndex(
@@ -393,7 +392,7 @@ namespace OficiosYa.Infrastructure.Migrations
                 name: "Calificaciones");
 
             migrationBuilder.DropTable(
-                name: "DireccionesClientes");
+                name: "DireccionCliente");
 
             migrationBuilder.DropTable(
                 name: "PasswordResetTokens");

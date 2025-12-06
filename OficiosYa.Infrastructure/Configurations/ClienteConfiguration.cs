@@ -18,10 +18,6 @@ namespace OficiosYa.Infrastructure.Configurations
                 .WithMany() // Usuario doesn't have Clientes collection by default
                 .HasForeignKey(x => x.UsuarioId);
 
-            builder.HasMany(x => x.Direcciones)
-                .WithOne(x => x.Cliente)
-                .HasForeignKey(x => x.ClienteId);
-
             builder.Property(x => x.FotoPerfil)
                 .HasColumnType("text")
                 .IsRequired(false);

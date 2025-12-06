@@ -86,16 +86,12 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("text");
-
                     b.Property<string>("Direccion")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("EsPrincipal")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
+                        .HasColumnType("boolean");
 
                     b.Property<double>("Latitud")
                         .HasColumnType("double precision");
@@ -107,7 +103,7 @@ namespace OficiosYa.Infrastructure.Migrations
 
                     b.HasIndex("ClienteId");
 
-                    b.ToTable("DireccionesClientes", (string)null);
+                    b.ToTable("DireccionCliente");
                 });
 
             modelBuilder.Entity("OficiosYa.Domain.Entities.Oficio", b =>

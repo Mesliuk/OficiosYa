@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OficiosYa.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using OficiosYa.Application.Interfaces;
 using OficiosYa.Infrastructure.Persistence;
 using OficiosYa.Domain.Entities;
 
@@ -23,7 +23,6 @@ namespace OficiosYa.Infrastructure.Repositories
         {
             return await _context.Clientes
                 .Include(c => c.Usuario)
-                .Include(c => c.Direcciones)
                 .FirstOrDefaultAsync(c => c.UsuarioId == usuarioId);
         }
 

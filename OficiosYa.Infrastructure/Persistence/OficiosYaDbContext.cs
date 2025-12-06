@@ -11,7 +11,6 @@ namespace OficiosYa.Infrastructure.Persistence
 
         public DbSet<Calificacion> Calificaciones { get; set; } = null!;
         public DbSet<Cliente> Clientes { get; set; } = null!;
-        public DbSet<DireccionCliente> DireccionesClientes { get; set; } = null!;
         public DbSet<Oficio> Oficios { get; set; } = null!;
         public DbSet<Rubro> Rubros { get; set; } = null!;
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; } = null!;

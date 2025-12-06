@@ -2,12 +2,9 @@
 using OficiosYa.Application.DTOs;
 using OficiosYa.Application.Handlers.Cliente;
 using OficiosYa.Application.Interfaces;
-using OficiosYa.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
-using System;
 using System.IO;
-using System.Linq;
 
 namespace OficiosYa.Api.Controllers
 {
@@ -43,6 +40,9 @@ namespace OficiosYa.Api.Controllers
                 cliente.Usuario.Apellido,
                 cliente.Usuario.Telefono,
                 cliente.Usuario.Email,
+                cliente.Usuario.Direccion,
+                cliente.Usuario.Latitud,
+                cliente.Usuario.Longitud,
                 FotoPerfil = cliente.FotoPerfil
             });
         }
@@ -59,13 +59,21 @@ namespace OficiosYa.Api.Controllers
                 cliente.Usuario.Nombre = request.Nombre;
                 cliente.Usuario.Apellido = request.Apellido;
                 cliente.Usuario.Telefono = request.Telefono;
+                
+                if (request.Direccion != null)
+                    cliente.Usuario.Direccion = request.Direccion;
+                
+                if (request.Latitud.HasValue)
+                    cliente.Usuario.Latitud = request.Latitud.Value;
+                
+                if (request.Longitud.HasValue)
+                    cliente.Usuario.Longitud = request.Longitud.Value;
             }
 
             var result = await _updateClienteHandler.HandleAsync(cliente);
             return Ok(result);
         }
 
-        // PUT api/cliente/{usuarioId}/foto
         [HttpPut("{usuarioId}/foto")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UpdatePhoto(int usuarioId, IFormFile FotoPerfil)
@@ -77,7 +85,6 @@ namespace OficiosYa.Api.Controllers
             var cliente = await _clienteRepository.GetByUsuarioIdAsync(usuarioId);
             if (cliente == null) return NotFound();
 
-            // remove old file if exists
             if (!string.IsNullOrEmpty(cliente.FotoPerfil))
             {
                 var oldFile = Path.Combine(_env.ContentRootPath, "wwwroot", cliente.FotoPerfil.Replace('/', Path.DirectorySeparatorChar));
@@ -100,7 +107,6 @@ namespace OficiosYa.Api.Controllers
             return Ok(new { FotoPerfil = relativePath });
         }
 
-        // DELETE api/cliente/{usuarioId}/foto
         [HttpDelete("{usuarioId}/foto")]
         public async Task<IActionResult> DeletePhoto(int usuarioId)
         {
@@ -124,5 +130,8 @@ namespace OficiosYa.Api.Controllers
         public string Nombre { get; set; } = string.Empty;
         public string Apellido { get; set; } = string.Empty;
         public string Telefono { get; set; } = string.Empty;
+        public string? Direccion { get; set; }
+        public double? Latitud { get; set; }
+        public double? Longitud { get; set; }
     }
 }
