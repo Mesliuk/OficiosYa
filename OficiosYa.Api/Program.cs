@@ -122,9 +122,11 @@ builder.Services.AddScoped<OficiosYa.Application.Handlers.Usuarios.ResetPassword
 builder.Services.AddScoped<OficiosYa.Application.Handlers.Cliente.UpdateClienteHandler>();
 
 // Profesional
-builder.Services.AddScoped<OficiosYa.Application.Handlers.Profesional.UpdateProfesionalHandler>();
-builder.Services.AddScoped<OficiosYa.Application.Handlers.Profesional.GetProfesionalByIdHandler>();
-builder.Services.AddScoped<OficiosYa.Application.Handlers.Profesional.SearchProfesionalHandler>();
+// builder.Services.AddScoped<OficiosYa.Application.Handlers.Profesional.UpdateProfesionalHandler>();
+// builder.Services.AddScoped<OficiosYa.Application.Handlers.Profesional.GetProfesionalByIdHandler>();
+// builder.Services.AddScoped<OficiosYa.Application.Handlers.Profesional.SearchProfesionalHandler>();
+// Profesional handlers removed because ProfesionalController was deleted
+// If needed later, re-register handlers here
 
 // Oficios
 builder.Services.AddScoped<OficiosYa.Application.Handlers.Oficios.GetAllOficiosHandler>();
@@ -164,6 +166,25 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+// Run migrations and seed rubros on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var db = services.GetRequiredService<OficiosYaDbContext>();
+        db.Database.Migrate();
+        // Seed default rubros
+        await OficiosYa.Infrastructure.Seed.RubroSeeder.SeedAsync(db);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetService<ILogger<Program>>();
+        logger?.LogError(ex, "Error al aplicar migraciones o sembrar datos");
+        throw;
+    }
+}
 
 // Serve static files (wwwroot)
 app.UseStaticFiles();
@@ -217,4 +238,6 @@ public static class OpenApiExtensions
         return app;
     }
 }
+
+
 

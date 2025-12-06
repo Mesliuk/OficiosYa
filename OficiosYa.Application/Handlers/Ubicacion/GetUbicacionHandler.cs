@@ -13,9 +13,10 @@ namespace OficiosYa.Application.Handlers.Ubicacion
             _repository = repository;
         }
 
-        public async Task<UbicacionProfesionalDto?> HandleAsync(int profesionalId)
+        public Task<UbicacionProfesionalDto?> HandleAsync(int profesionalId)
         {
-            return await _repository.GetByProfesionalAsync(profesionalId);
+            // Location feature removed: always return null
+            return Task.FromResult<UbicacionProfesionalDto?>(null);
         }
     }
 }

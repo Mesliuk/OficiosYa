@@ -13,6 +13,10 @@ public class Usuario
     public string PasswordHash { get; set; } = null!;
     public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
     public bool Activo { get; set; } = true;
+    public string Direccion { get; set; } = null!;
+    public double Latitud { get; set; }
+    public double Longitud { get; set; }
+
     // Store profile photo as path/URL instead of binary
     public string? FotoPerfil { get; set; }
     public UsuarioRoleEnum Rol { get; set; }

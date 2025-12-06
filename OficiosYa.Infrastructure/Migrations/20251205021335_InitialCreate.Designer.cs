@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OficiosYa.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using OficiosYa.Infrastructure.Persistence;
 namespace OficiosYa.Infrastructure.Migrations
 {
     [DbContext(typeof(OficiosYaDbContext))]
-    partial class OficiosYaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251205021335_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

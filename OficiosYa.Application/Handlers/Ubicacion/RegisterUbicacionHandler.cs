@@ -13,9 +13,10 @@ namespace OficiosYa.Application.Handlers.Ubicacion
             _repository = repository;
         }
 
-        public async Task HandleAsync(UbicacionProfesionalDto dto)
+        public Task HandleAsync(UbicacionProfesionalDto dto)
         {
-            await _repository.RegistrarUbicacionAsync(dto);
+            // Location feature removed: no-op handler
+            return Task.CompletedTask;
         }
     }
 }

@@ -20,6 +20,19 @@ public class DireccionClienteConfiguration : IEntityTypeConfiguration<DireccionC
 
         builder.HasOne(x => x.Cliente)
             .WithMany(x => x.Direcciones)
-            .HasForeignKey(x => x.ClienteId);
+            .HasForeignKey(x => x.ClienteId)
+            .IsRequired();
+
+        builder.Property(x => x.Descripcion)
+            .HasColumnType("text")
+            .IsRequired(false);
+
+        builder.Property(x => x.Direccion)
+            .HasColumnType("text")
+            .IsRequired(false);
+
+        builder.Property(x => x.EsPrincipal)
+            .IsRequired()
+            .HasDefaultValue(false);
     }
 }

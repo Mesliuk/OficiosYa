@@ -15,12 +15,14 @@ namespace OficiosYa.Domain.Entities
         public int TotalCalificaciones { get; set; }
         public Usuario Usuario { get; set; } = null!;
         public ICollection<UbicacionProfesional> Ubicaciones { get; set; } = new List<UbicacionProfesional>();
-        public ICollection<ProfesionalOficio> Oficios { get; set; } = new List<ProfesionalOficio>();
-
-        // Profile photo path stored per-professional
-        public string? FotoPerfil { get; set; }
+        public ICollection<ProfesionalOficio> Oficios { get; set; } = new List<ProfesionalOficio>();  
 
         // Descripcion (replaces old 'Bio')
         public string? Descripcion { get; set; }
+
+        // Foto perfil del profesional
+        public string? FotoPerfil { get; set; }
     }
 }
+
+

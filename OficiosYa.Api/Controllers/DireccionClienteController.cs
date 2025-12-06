@@ -29,7 +29,8 @@ namespace OficiosYa.Api.Controllers
                 d.Descripcion,
                 d.Direccion,
                 d.Latitud,
-                d.Longitud
+                d.Longitud,
+                d.EsPrincipal
             });
 
             return Ok(dirs);
@@ -42,19 +43,34 @@ namespace OficiosYa.Api.Controllers
             var cliente = await _clienteRepository.GetByUsuarioIdAsync(usuarioId);
             if (cliente == null) return NotFound();
 
+            // If new address is marked as principal, clear existing principal flags
+            if (request.EsPrincipal)
+            {
+                foreach (var d in cliente.Direcciones)
+                    d.EsPrincipal = false;
+            }
+
             var direccion = new DireccionCliente
             {
                 Descripcion = string.IsNullOrWhiteSpace(request.Descripcion) ? "Ubicación" : request.Descripcion,
                 Direccion = request.Direccion,
                 Latitud = request.Latitud,
                 Longitud = request.Longitud,
-                ClienteId = cliente.Id
+                ClienteId = cliente.Id,
+                EsPrincipal = request.EsPrincipal
             };
 
             cliente.Direcciones.Add(direccion);
             await _clienteRepository.ActualizarAsync(cliente);
 
-            return CreatedAtAction(nameof(GetDirecciones), new { usuarioId = usuarioId }, direccion);
+            return CreatedAtAction(nameof(GetDirecciones), new { usuarioId = usuarioId }, new {
+                direccion.Id,
+                direccion.Descripcion,
+                direccion.Direccion,
+                direccion.Latitud,
+                direccion.Longitud,
+                direccion.EsPrincipal
+            });
         }
 
         // PUT api/direccioncliente/{usuarioId}/{direccionId}
@@ -72,6 +88,42 @@ namespace OficiosYa.Api.Controllers
             direccion.Latitud = request.Latitud ?? direccion.Latitud;
             direccion.Longitud = request.Longitud ?? direccion.Longitud;
 
+            if (request.EsPrincipal.HasValue)
+            {
+                if (request.EsPrincipal.Value)
+                {
+                    // unset other principals
+                    foreach (var d in cliente.Direcciones)
+                        d.EsPrincipal = false;
+                    direccion.EsPrincipal = true;
+                }
+                else
+                {
+                    // unmark this as principal
+                    direccion.EsPrincipal = false;
+                }
+            }
+
+            await _clienteRepository.ActualizarAsync(cliente);
+            return NoContent();
+        }
+
+        // PUT api/direccioncliente/{usuarioId}/{direccionId}/principal
+        [HttpPut("{usuarioId}/{direccionId}/principal")]
+        public async Task<IActionResult> SetPrincipal(int usuarioId, int direccionId)
+        {
+            var cliente = await _clienteRepository.GetByUsuarioIdAsync(usuarioId);
+            if (cliente == null) return NotFound();
+
+            var direccion = cliente.Direcciones.FirstOrDefault(d => d.Id == direccionId);
+            if (direccion == null) return NotFound();
+
+            // unset other principals
+            foreach (var d in cliente.Direcciones)
+                d.EsPrincipal = false;
+
+            direccion.EsPrincipal = true;
+
             await _clienteRepository.ActualizarAsync(cliente);
             return NoContent();
         }
@@ -87,6 +139,13 @@ namespace OficiosYa.Api.Controllers
             if (direccion == null) return NotFound();
 
             cliente.Direcciones.Remove(direccion);
+
+            // If deleted was principal, optionally set another as principal (choose first)
+            if (direccion.EsPrincipal && cliente.Direcciones.Any())
+            {
+                cliente.Direcciones.First().EsPrincipal = true;
+            }
+
             await _clienteRepository.ActualizarAsync(cliente);
 
             return NoContent();
@@ -99,6 +158,7 @@ namespace OficiosYa.Api.Controllers
         public string Direccion { get; set; } = string.Empty;
         public double Latitud { get; set; }
         public double Longitud { get; set; }
+        public bool EsPrincipal { get; set; } = false;
     }
 
     public class UpdateDireccionRequest
@@ -107,5 +167,6 @@ namespace OficiosYa.Api.Controllers
         public string? Direccion { get; set; }
         public double? Latitud { get; set; }
         public double? Longitud { get; set; }
+        public bool? EsPrincipal { get; set; }
     }
 }

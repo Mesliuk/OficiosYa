@@ -19,5 +19,8 @@ namespace OficiosYa.Application.DTOs
         [Required]
         [Range(-180,180)]
         public double Longitud { get; set; }
+
+        // Friendly name/label for the location (e.g. "Casa", "Sucursal", "Calle Falsa 123")
+        public string? NombreDireccion { get; set; }
     }
 }

@@ -1,13 +1,12 @@
 using FluentValidation;
 using OficiosYa.Api.Controllers;
 using OficiosYa.Api.Validators.Helpers;
-using OficiosYa.Application.Interfaces;
 
 namespace OficiosYa.Api.Validators
 {
     public class UpdateProfesionalRequestValidator : AbstractValidator<UpdateProfesionalRequest>
     {
-        public UpdateProfesionalRequestValidator(IProfesionalRepository profesionalRepo)
+        public UpdateProfesionalRequestValidator()
         {
             RuleFor(x => x.Nombre).NotEmpty().MaximumLength(100);
             RuleFor(x => x.Apellido).NotEmpty().MaximumLength(100);

@@ -20,6 +20,8 @@ namespace OficiosYa.Infrastructure.Repositories
                 .Include(p => p.Usuario)
                 .Include(p => p.Oficios)
                     .ThenInclude(po => po.Oficio)
+                        .ThenInclude(o => o.Rubro)
+                .Include(p => p.Ubicaciones) // include ubicaciones (direccion/lat/long)
                 .FirstOrDefaultAsync(p => p.Usuario.Id == usuarioId);
         }
 
@@ -29,6 +31,8 @@ namespace OficiosYa.Infrastructure.Repositories
                 .Include(p => p.Usuario)
                 .Include(p => p.Oficios)
                     .ThenInclude(po => po.Oficio)
+                        .ThenInclude(o => o.Rubro)
+                .Include(p => p.Ubicaciones) // include ubicaciones
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -38,6 +42,8 @@ namespace OficiosYa.Infrastructure.Repositories
                 .Include(p => p.Usuario)
                 .Include(p => p.Oficios)
                     .ThenInclude(po => po.Oficio)
+                        .ThenInclude(o => o.Rubro)
+                .Include(p => p.Ubicaciones) // include ubicaciones
                 .AsQueryable();
 
             // Filtro por Oficio
@@ -94,6 +100,14 @@ namespace OficiosYa.Infrastructure.Repositories
                 query = query.Where(p => p.Id != excludeProfesionalId.Value);
 
             return await query.AnyAsync(p => p.Documento != null && p.Documento.Replace("-", "").Replace(" ", "") == normalized);
+        }
+
+        public async Task DeleteAsync(int profesionalId)
+        {
+            var prof = await _context.Profesionales.FindAsync(profesionalId);
+            if (prof == null) return;
+            _context.Profesionales.Remove(prof);
+            await _context.SaveChangesAsync();
         }
     }
 }

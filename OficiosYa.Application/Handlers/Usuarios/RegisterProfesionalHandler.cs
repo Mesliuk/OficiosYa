@@ -41,7 +41,10 @@ namespace OficiosYa.Application.Handlers.Usuarios
                 Telefono = dto.Telefono,
                 PasswordHash = PasswordHasher.Hash(dto.Password),
                 Rol = UsuarioRoleEnum.Profesional,
-                FotoPerfil = null
+                FotoPerfil = fotoPath,
+                Direccion = dto.Direccion ?? string.Empty,
+                Latitud = dto.Latitud ?? 0,
+                Longitud = dto.Longitud ?? 0
             };
 
             await _usuarioRepo.AgregarAsync(usuario);
@@ -53,7 +56,7 @@ namespace OficiosYa.Application.Handlers.Usuarios
                 Verificado = false,
                 RatingPromedio = 0,
                 TotalCalificaciones = 0,
-                FotoPerfil = fotoPath,
+                FotoPerfil = null,
                 Descripcion = dto.Descripcion
             };
 
@@ -90,7 +93,7 @@ namespace OficiosYa.Application.Handlers.Usuarios
                 Email = usuario.Email,
                 Telefono = usuario.Telefono,
                 Rol = usuario.Rol.ToString(),
-                FotoPerfil = profesional.FotoPerfil
+                FotoPerfil = usuario.FotoPerfil
             };
         }
     }
