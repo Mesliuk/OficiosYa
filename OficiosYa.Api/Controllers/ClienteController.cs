@@ -47,6 +47,24 @@ namespace OficiosYa.Api.Controllers
             });
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetUsuario()
+        {
+            var cliente = await _clienteRepository.GetUsuarioAsync();
+            if (cliente == null)
+                return NotFound();
+
+            return Ok(new
+            {
+                cliente.Id,
+                cliente.Usuario.Nombre,
+                cliente.Usuario.Apellido,
+                cliente.Usuario.Telefono,
+                cliente.Usuario.Email,
+                FotoPerfil = cliente.FotoPerfil
+            });
+        }
+
         [HttpPut("{usuarioId}")]
         public async Task<IActionResult> Update(int usuarioId, [FromBody] UpdateClienteRequest request)
         {

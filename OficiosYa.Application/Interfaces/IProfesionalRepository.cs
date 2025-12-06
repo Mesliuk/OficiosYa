@@ -11,5 +11,6 @@ namespace OficiosYa.Application.Interfaces
         Task UpdateAsync(Profesional profesional);
         Task<bool> ExistsByDocumentoAsync(string documento, int? excludeProfesionalId = null);
         Task DeleteAsync(int profesionalId);
+        Task ActualizarRatingAsync(int receptorId, double v1, int v2);
     }
 }

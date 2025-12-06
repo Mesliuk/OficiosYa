@@ -38,5 +38,13 @@ namespace OficiosYa.Infrastructure.Repositories
             _context.Clientes.Add(cliente);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<Cliente?> GetUsuarioAsync()
+        {
+            return await _context.Clientes
+                .Include(c => c.Usuario)
+                .Include(c => c.Direcciones)
+                .FirstOrDefaultAsync();
+        }
     }
 }

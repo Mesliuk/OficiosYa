@@ -121,6 +121,9 @@ builder.Services.AddScoped<OficiosYa.Application.Handlers.Usuarios.ResetPassword
 // Cliente
 builder.Services.AddScoped<OficiosYa.Application.Handlers.Cliente.UpdateClienteHandler>();
 
+//Calificaciones
+builder.Services.AddScoped<OficiosYa.Application.Handlers.Calificacion.RegistrarCalificacionHandler>();
+
 // Profesional
 // builder.Services.AddScoped<OficiosYa.Application.Handlers.Profesional.UpdateProfesionalHandler>();
 // builder.Services.AddScoped<OficiosYa.Application.Handlers.Profesional.GetProfesionalByIdHandler>();

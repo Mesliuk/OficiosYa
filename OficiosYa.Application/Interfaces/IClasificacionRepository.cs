@@ -12,6 +12,6 @@ namespace OficiosYa.Application.Interfaces
         Task RegistrarAsync(CalificacionDto dto);
         Task<IEnumerable<CalificacionDto>> GetByReceptorAsync(int receptorId);
         Task<double> ObtenerPromedioAsync(int receptorId);
-
+        Task<IList<CalificacionDto>> ObtenerPorReceptorAsync(int receptorId);
     }
 }
