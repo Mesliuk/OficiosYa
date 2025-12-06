@@ -51,6 +51,7 @@ namespace OficiosYa.Api.Controllers
             }
 
             var dto = _mapper.Map<RegistroClienteDto>(request);
+            
             dto.FotoPerfil = relativePath;
 
             var result = await _registerClienteHandler.HandleAsync(dto);

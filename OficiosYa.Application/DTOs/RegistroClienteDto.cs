@@ -10,7 +10,7 @@ namespace OficiosYa.Application.DTOs
     public class RegistroClienteDto : RegistroUsuarioBaseDto
     {
         // Address/location fields optional
-        public string? Direccion { get; set; }
+        //public string? Direccion { get; set; }
         public double? Latitud { get; set; }
         public double? Longitud { get; set; }
         public string? Descripcion { get; set; }
