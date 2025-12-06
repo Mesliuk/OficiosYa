@@ -1,4 +1,5 @@
 ﻿using OficiosYa.Domain.Entities;
+using OficiosYa.Application.DTOs;
 
 namespace OficiosYa.Application.Interfaces
 {
@@ -11,5 +12,8 @@ namespace OficiosYa.Application.Interfaces
         Task UpdateAsync(Profesional profesional);
         Task<bool> ExistsByDocumentoAsync(string documento, int? excludeProfesionalId = null);
         Task DeleteAsync(int profesionalId);
+
+        // New: obtain projected list suitable for API responses
+        Task<IEnumerable<ProfesionalListItemDto>> ObtenerListaAsync(string? oficio, double? lat, double? lng, double? maxDist, int? minimoRating);
     }
 }
