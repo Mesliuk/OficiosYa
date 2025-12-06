@@ -2,6 +2,7 @@
 using OficiosYa.Application.DTOs;
 using OficiosYa.Application.Interfaces;
 using OficiosYa.Domain.Entities;
+using OficiosYa.Domain.Enums;
 using OficiosYa.Infrastructure.Persistence;
 
 namespace OficiosYa.Infrastructure.Repositories
@@ -17,8 +18,16 @@ namespace OficiosYa.Infrastructure.Repositories
 
         public async Task<Usuario?> ObtenerPorEmailAsync(string email)
         {
+            var e = email?.Trim() ?? string.Empty;
             return await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Email == email);
+                .FirstOrDefaultAsync(u => EF.Functions.ILike(u.Email, e));
+        }
+
+        public async Task<Usuario?> ObtenerPorEmailYRolAsync(string email, UsuarioRoleEnum rol)
+        {
+            var e = email?.Trim() ?? string.Empty;
+            return await _context.Usuarios
+                .FirstOrDefaultAsync(u => EF.Functions.ILike(u.Email, e) && u.Rol == rol);
         }
 
         public async Task AgregarAsync(Usuario usuario)

@@ -2,10 +2,7 @@
 using OficiosYa.Application.DTOs;
 using OficiosYa.Application.Interfaces;
 using OficiosYa.Application.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using OficiosYa.Domain.Enums;
 using System.Threading.Tasks;
 
 namespace OficiosYa.Application.Handlers.Usuarios
@@ -14,20 +11,18 @@ namespace OficiosYa.Application.Handlers.Usuarios
     {
         private readonly IUsuarioRepository _usuarioRepo;
 
-
         public LoginUsuarioHandler(IUsuarioRepository usuarioRepo) { _usuarioRepo = usuarioRepo; }
 
 
         public async Task<UsuarioDto?> HandleAsync(LoginCommand command)
         {
-            var usuario = await _usuarioRepo.ObtenerPorEmailAsync(command.Correo);
+            // If role specified, use ObtenerPorEmailYRolAsync
+            var usuario = string.IsNullOrWhiteSpace(command.Role)
+                ? await _usuarioRepo.ObtenerPorEmailAsync(command.Correo)
+                : await _usuarioRepo.ObtenerPorEmailYRolAsync(command.Correo, Enum.Parse<UsuarioRoleEnum>(command.Role, true));
+
             if (usuario == null || !PasswordHasher.Verify(command.Password, usuario.PasswordHash))
                 return null;
-
-
-            // Generar token (ejemplo simple)
-            string token = TokenGenerator.GenerateToken(usuario.Email);
-
 
             return new UsuarioDto
             {
@@ -37,7 +32,7 @@ namespace OficiosYa.Application.Handlers.Usuarios
                 Email = usuario.Email,
                 Telefono = usuario.Telefono,
                 Rol = usuario.Rol.ToString(),
-                // Token puede agregarse al DTO si querés
+                Token = null
             };
         }
     }

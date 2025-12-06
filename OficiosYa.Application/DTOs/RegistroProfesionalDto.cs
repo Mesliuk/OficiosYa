@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,15 +7,16 @@ using System.Threading.Tasks;
 
 namespace OficiosYa.Application.DTOs
 {
-    public class RegistroProfesionalDto
+    public class RegistroProfesionalDto : RegistroUsuarioBaseDto
     {
-        public string Nombre { get; set; } = null!;
-        public string Apellido { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string Telefono { get; set; } = null!;
-        public string Password { get; set; } = null!;
         public string Documento { get; set; } = null!;
-        public string Bio { get; set; } = "";
-        public List<int> OficiosIds { get; set; } = new();
+        public System.Collections.Generic.List<int> OficiosIds { get; set; } = new();
+
+        // Optional
+        public string? FotoPerfil { get; set; }
+        public string? Direccion { get; set; }
+        public double? Latitud { get; set; }
+        public double? Longitud { get; set; }
+        public string? Descripcion { get; set; }
     }
 }

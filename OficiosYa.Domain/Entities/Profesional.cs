@@ -10,14 +10,19 @@ namespace OficiosYa.Domain.Entities
     {
         public int Id { get; set; } // FK Usuario
         public string Documento { get; set; } = null!;
-        public string Bio { get; set; } = string.Empty;
         public bool Verificado { get; set; }
         public double RatingPromedio { get; set; }
         public int TotalCalificaciones { get; set; }
-
-
         public Usuario Usuario { get; set; } = null!;
-        public ICollection<ProfesionalOficio>? Oficios { get; set; }
-        public ICollection<Calificacion>? CalificacionesRecibidas { get; set; }
+        public ICollection<UbicacionProfesional> Ubicaciones { get; set; } = new List<UbicacionProfesional>();
+        public ICollection<ProfesionalOficio> Oficios { get; set; } = new List<ProfesionalOficio>();  
+
+        // Descripcion (replaces old 'Bio')
+        public string? Descripcion { get; set; }
+
+        // Foto perfil del profesional
+        public string? FotoPerfil { get; set; }
     }
 }
+
+

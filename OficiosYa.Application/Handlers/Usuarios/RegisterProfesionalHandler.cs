@@ -1,6 +1,4 @@
-﻿using OficiosYa.Application.Commands.Profesionales;
-using OficiosYa.Application.Commands.Usuarios;
-using OficiosYa.Application.DTOs;
+﻿using OficiosYa.Application.DTOs;
 using OficiosYa.Application.Interfaces;
 using OficiosYa.Application.Utils;
 using OficiosYa.Domain.Entities;
@@ -17,48 +15,75 @@ namespace OficiosYa.Application.Handlers.Usuarios
     {
         private readonly IProfesionalRepository _profRepo;
         private readonly IUsuarioRepository _usuarioRepo;
+        private readonly IOficioRepository _oficioRepo;
+        private readonly IUbicacionRepository _ubicacionRepo;
 
-
-        public RegisterProfesionalHandler(IProfesionalRepository profRepo, IUsuarioRepository usuarioRepo)
+        public RegisterProfesionalHandler(IProfesionalRepository profRepo, IUsuarioRepository usuarioRepo, IOficioRepository oficioRepo, IUbicacionRepository ubicacionRepo)
         {
             _profRepo = profRepo;
             _usuarioRepo = usuarioRepo;
+            _oficioRepo = oficioRepo;
+            _ubicacionRepo = ubicacionRepo;
         }
 
-
-        public async Task<UsuarioDto> HandleAsync(RegistrarProfesionalCommand command)
+        public async Task<UsuarioDto> HandleAsync(RegistroProfesionalDto dto)
         {
-            var existing = await _usuarioRepo.ObtenerPorEmailAsync(command.Correo);
-            if (existing != null) throw new Exception("El correo ya está registrado");
+            var existingProfesional = await _usuarioRepo.ObtenerPorEmailYRolAsync(dto.Email, UsuarioRoleEnum.Profesional);
+            if (existingProfesional != null) throw new Exception("El correo ya está registrado para un profesional");
 
+            string? fotoPath = dto.FotoPerfil;
 
             var usuario = new Usuario
             {
-                Nombre = command.Nombre,
-                Apellido = command.Apellido,
-                Email = command.Correo,
-                Telefono = command.Telefono,
-                PasswordHash = PasswordHasher.Hash(command.Password),
-                Rol = UsuarioRol.Profesional
+                Nombre = dto.Nombre,
+                Apellido = dto.Apellido,
+                Email = dto.Email,
+                Telefono = dto.Telefono,
+                PasswordHash = PasswordHasher.Hash(dto.Password),
+                Rol = UsuarioRoleEnum.Profesional,
+                FotoPerfil = fotoPath,
+                Direccion = dto.Direccion ?? string.Empty,
+                Latitud = dto.Latitud ?? 0,
+                Longitud = dto.Longitud ?? 0
             };
 
-
             await _usuarioRepo.AgregarAsync(usuario);
-
 
             var profesional = new OficiosYa.Domain.Entities.Profesional
             {
                 Usuario = usuario,
-                Documento = command.Documento,
-                Bio = command.Bio,
+                Documento = dto.Documento,
                 Verificado = false,
                 RatingPromedio = 0,
-                TotalCalificaciones = 0
+                TotalCalificaciones = 0,
+                FotoPerfil = null,
+                Descripcion = dto.Descripcion
             };
 
+            if (dto.OficiosIds != null && dto.OficiosIds.Any())
+            {
+                foreach (var oficioId in dto.OficiosIds)
+                {
+                    var oficio = await _oficioRepo.ObtenerPorIdAsync(oficioId);
+                    if (oficio != null)
+                    {
+                        profesional.Oficios.Add(new ProfesionalOficio { Oficio = oficio, OficioId = oficioId });
+                    }
+                }
+            }
 
             await _profRepo.AgregarAsync(profesional);
 
+            if (dto.Latitud.HasValue && dto.Longitud.HasValue)
+            {
+                var ubDto = new UbicacionProfesionalDto
+                {
+                    ProfesionalId = profesional.Id,
+                    Latitud = dto.Latitud.Value,
+                    Longitud = dto.Longitud.Value
+                };
+                await _ubicacionRepo.RegistrarUbicacionAsync(ubDto);
+            }
 
             return new UsuarioDto
             {
@@ -67,7 +92,8 @@ namespace OficiosYa.Application.Handlers.Usuarios
                 Apellido = usuario.Apellido,
                 Email = usuario.Email,
                 Telefono = usuario.Telefono,
-                Rol = usuario.Rol.ToString()
+                Rol = usuario.Rol.ToString(),
+                FotoPerfil = usuario.FotoPerfil
             };
         }
     }

@@ -18,18 +18,20 @@ public class ProfesionalConfiguration : IEntityTypeConfiguration<Profesional>
 
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.Documento).IsRequired();
+
+        builder.Property(x => x.FotoPerfil)
+            .HasColumnType("text")
+            .IsRequired(false);
+
+        builder.Property(x => x.Descripcion)
+            .HasColumnType("text")
+            .IsRequired(false);
+
         builder.HasOne(x => x.Usuario)
             .WithOne()
-            .HasForeignKey<Profesional>(x => x.Id);
-
-        builder.HasMany(x => x.Oficios)
-            .WithOne(x => x.Profesional)
-            .HasForeignKey(x => x.ProfesionalId);
-
-        // Ubicacion property does not exist in Profesional entity
-        // builder.HasOne(x => x.Ubicacion)
-        //     .WithOne(x => x.Profesional)
-        //     .HasForeignKey<UbicacionProfesional>(x => x.ProfesionalId);
+            .HasForeignKey<Profesional>(x => x.Id)
+            .IsRequired();
     }
 }
 

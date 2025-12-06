@@ -22,6 +22,11 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
         builder.Property(x => x.Apellido).IsRequired().HasMaxLength(100);
         builder.Property(x => x.Email).IsRequired().HasMaxLength(150);
 
+        builder.Property(x => x.FotoPerfil)
+            .HasColumnName("FotoPerfil")
+            .HasColumnType("text")
+            .IsRequired(false);
+
         builder.HasMany(x => x.Roles)
             .WithOne(x => x.Usuario)
             .HasForeignKey(x => x.UsuarioId);

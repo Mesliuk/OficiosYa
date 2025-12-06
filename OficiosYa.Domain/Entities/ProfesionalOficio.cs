@@ -12,9 +12,9 @@ namespace OficiosYa.Domain.Entities
         public int ProfesionalId { get; set; }
         public int OficioId { get; set; }
         public int AnosExperiencia { get; set; }
-
-
         public Profesional Profesional { get; set; } = null!;
         public Oficio Oficio { get; set; } = null!;
+
+
     }
 }

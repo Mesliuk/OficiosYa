@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OficiosYa.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using OficiosYa.Application.Interfaces;
 using OficiosYa.Infrastructure.Persistence;
 using OficiosYa.Domain.Entities;
 

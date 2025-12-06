@@ -11,5 +11,6 @@ namespace OficiosYa.Application.Interfaces
     {
         Task RegistrarUbicacionAsync(UbicacionProfesionalDto dto);
         Task<UbicacionProfesionalDto?> GetByProfesionalAsync(int profesionalId);
+        Task DeleteByProfesionalAsync(int profesionalId);
     }
 }

@@ -10,9 +10,12 @@ namespace OficiosYa.Application.Commands.Usuarios
     {
         public string Correo { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+        public string? Role { get; set; }
 
-        public LoginCommand(string correo, string password)
+        public LoginCommand(string correo, string password, string? role = null)
         {  Correo = correo; 
-           Password = password;}
+           Password = password;
+           Role = role;
+        }
     }
 }

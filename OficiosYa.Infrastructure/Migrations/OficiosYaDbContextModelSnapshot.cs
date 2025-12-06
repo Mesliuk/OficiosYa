@@ -33,33 +33,28 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Property<string>("Comentario")
                         .HasColumnType("text");
 
+                    b.Property<int>("EmisorId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Puntaje")
                         .HasColumnType("integer");
 
-                    b.Property<int>("SolicitudId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UsuarioCalificaId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UsuarioCalificadoId")
+                    b.Property<int>("ReceptorId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SolicitudId");
+                    b.HasIndex("EmisorId");
 
-                    b.HasIndex("UsuarioCalificaId");
-
-                    b.HasIndex("UsuarioCalificadoId");
+                    b.HasIndex("ReceptorId");
 
                     b.ToTable("Calificaciones", (string)null);
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.DireccionUsuario", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Cliente", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,19 +62,8 @@ namespace OficiosYa.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Alias")
-                        .IsRequired()
+                    b.Property<string>("FotoPerfil")
                         .HasColumnType("text");
-
-                    b.Property<string>("Direccion")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<double>("Latitud")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("Longitud")
-                        .HasColumnType("double precision");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("integer");
@@ -88,66 +72,10 @@ namespace OficiosYa.Infrastructure.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("DireccionesUsuario", (string)null);
+                    b.ToTable("Clientes", (string)null);
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.Oficio", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("text");
-
-                    b.Property<string>("IconoUrl")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Oficios", (string)null);
-                });
-
-            modelBuilder.Entity("OficiosYa.Domain.Entities.SolicitudCandidato", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("DistanciaCliente")
-                        .HasColumnType("double precision");
-
-                    b.Property<int>("Estado")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SolicitudId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TiempoEstimadoLlegada")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TrabajadorId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SolicitudId");
-
-                    b.HasIndex("TrabajadorId");
-
-                    b.ToTable("SolicitudesCandidatos");
-                });
-
-            modelBuilder.Entity("OficiosYa.Domain.Entities.SolicitudServicio", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.DireccionCliente", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -158,69 +86,561 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("DescripcionProblema")
+                    b.Property<string>("Direccion")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("DireccionId")
-                        .HasColumnType("integer");
+                    b.Property<bool>("EsPrincipal")
+                        .HasColumnType("boolean");
 
-                    b.Property<int>("Estado")
-                        .HasColumnType("integer");
+                    b.Property<double>("Latitud")
+                        .HasColumnType("double precision");
 
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("MetodoPago")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("OficioId")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("PrecioEstimado")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal?>("PrecioFinal")
-                        .HasColumnType("numeric");
-
-                    b.Property<int?>("TrabajadorAsignadoId")
-                        .HasColumnType("integer");
+                    b.Property<double>("Longitud")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
 
-                    b.HasIndex("DireccionId");
-
-                    b.HasIndex("OficioId");
-
-                    b.HasIndex("TrabajadorAsignadoId");
-
-                    b.ToTable("SolicitudesServicio", (string)null);
+                    b.ToTable("DireccionCliente");
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.Trabajador", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Oficio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("RequiereLicencia")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("RubroId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RubroId");
+
+                    b.ToTable("Oficios", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Albañil",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Plomero / Gasista (matriculado)",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Electricista",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Pintor",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Carpintero",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Herrero",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Vidriero",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Techista",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Yesero",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Colocador de durlock",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Colocador de cerámica / porcelanato",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Instalador de aire acondicionado",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Instalador de alarmas / cámaras de seguridad",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Jardinero",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Parquero",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Podador de árboles",
+                            RequiereLicencia = false,
+                            RubroId = 1
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Mecánico automotor",
+                            RequiereLicencia = false,
+                            RubroId = 2
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Chapista",
+                            RequiereLicencia = false,
+                            RubroId = 2
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Pintor automotor",
+                            RequiereLicencia = false,
+                            RubroId = 2
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Gomería",
+                            RequiereLicencia = false,
+                            RubroId = 2
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Mecánico de motos",
+                            RequiereLicencia = false,
+                            RubroId = 2
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Electricista automotor",
+                            RequiereLicencia = false,
+                            RubroId = 2
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Lavadero de autos / Detailing",
+                            RequiereLicencia = false,
+                            RubroId = 2
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Limpieza general",
+                            RequiereLicencia = false,
+                            RubroId = 3
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Limpieza profunda",
+                            RequiereLicencia = false,
+                            RubroId = 3
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Limpieza post-obra",
+                            RequiereLicencia = false,
+                            RubroId = 3
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Niñera",
+                            RequiereLicencia = false,
+                            RubroId = 3
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Cuidador de adultos mayores",
+                            RequiereLicencia = false,
+                            RubroId = 3
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Mudanzas / Fletes",
+                            RequiereLicencia = false,
+                            RubroId = 3
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Paseador de perros",
+                            RequiereLicencia = false,
+                            RubroId = 3
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Técnico en PC / Notebook",
+                            RequiereLicencia = false,
+                            RubroId = 4
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Técnico en celulares",
+                            RequiereLicencia = false,
+                            RubroId = 4
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Instalador de redes",
+                            RequiereLicencia = false,
+                            RubroId = 4
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Técnico en impresoras",
+                            RequiereLicencia = false,
+                            RubroId = 4
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Cerrajero",
+                            RequiereLicencia = false,
+                            RubroId = 5
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Tapicero",
+                            RequiereLicencia = false,
+                            RubroId = 5
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Reparación de electrodomésticos",
+                            RequiereLicencia = false,
+                            RubroId = 5
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Servicio técnico de heladeras",
+                            RequiereLicencia = false,
+                            RubroId = 5
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Servicio técnico de lavarropas",
+                            RequiereLicencia = false,
+                            RubroId = 5
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Técnico en TV",
+                            RequiereLicencia = false,
+                            RubroId = 5
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Panadero",
+                            RequiereLicencia = false,
+                            RubroId = 6
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Pastelero",
+                            RequiereLicencia = false,
+                            RubroId = 6
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Cocinero",
+                            RequiereLicencia = false,
+                            RubroId = 6
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Parrillero",
+                            RequiereLicencia = false,
+                            RubroId = 6
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Bartender",
+                            RequiereLicencia = false,
+                            RubroId = 6
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Costurera / Modista",
+                            RequiereLicencia = false,
+                            RubroId = 7
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Sastre",
+                            RequiereLicencia = false,
+                            RubroId = 7
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Artesano",
+                            RequiereLicencia = false,
+                            RubroId = 7
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Zapatero",
+                            RequiereLicencia = false,
+                            RubroId = 7
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Activo = true,
+                            Descripcion = "",
+                            Nombre = "Joyería / Relojería",
+                            RequiereLicencia = false,
+                            RubroId = 7
+                        });
+                });
+
+            modelBuilder.Entity("OficiosYa.Domain.Entities.PasswordResetToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Expira")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Usado")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("PasswordResetTokens");
+                });
+
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Profesional", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Bio")
+                    b.Property<string>("Descripcion")
                         .HasColumnType("text");
 
                     b.Property<string>("Documento")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("FechaNacimiento")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Genero")
+                    b.Property<string>("FotoPerfil")
                         .HasColumnType("text");
 
                     b.Property<double>("RatingPromedio")
                         .HasColumnType("double precision");
 
-                    b.Property<int>("TotalTrabajosRealizados")
+                    b.Property<int>("TotalCalificaciones")
                         .HasColumnType("integer");
 
                     b.Property<bool>("Verificado")
@@ -228,10 +648,10 @@ namespace OficiosYa.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Trabajadores", (string)null);
+                    b.ToTable("Profesionales", (string)null);
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.TrabajadorOficio", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.ProfesionalOficio", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -242,31 +662,104 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Property<int>("AnosExperiencia")
                         .HasColumnType("integer");
 
-                    b.Property<string>("CertificadosUrl")
-                        .HasColumnType("text");
-
                     b.Property<int>("OficioId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("PrecioHoraBase")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("TrabajadorId")
+                    b.Property<int>("ProfesionalId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OficioId");
 
-                    b.HasIndex("TrabajadorId");
+                    b.HasIndex("ProfesionalId");
 
-                    b.ToTable("TrabajadoresOficios", (string)null);
+                    b.ToTable("ProfesionalesOficios");
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.UbicacionTrabajador", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Rubro", b =>
                 {
-                    b.Property<int>("TrabajadorId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("Slug")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rubros", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Descripcion = "Trabajos de construcción y mantenimiento",
+                            Nombre = "Construcción y mantenimiento",
+                            Slug = "construccion-y-mantenimiento"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Descripcion = "Servicios para vehículos y mecánica",
+                            Nombre = "Vehículos y mecánica",
+                            Slug = "vehiculos-y-mecanica"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Descripcion = "Servicios domésticos y para el hogar",
+                            Nombre = "Servicios para el hogar",
+                            Slug = "servicios-para-el-hogar"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Descripcion = "Servicios técnicos y digitales",
+                            Nombre = "Tecnología y digital",
+                            Slug = "tecnologia-y-digital"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Descripcion = "Servicios de reparación diversos",
+                            Nombre = "Reparaciones varias",
+                            Slug = "reparaciones-varias"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Descripcion = "Profesionales de cocina y gastronomía",
+                            Nombre = "Gastronomía",
+                            Slug = "gastronomia"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Descripcion = "Oficios manuales y artísticos",
+                            Nombre = "Artes y oficios manuales",
+                            Slug = "artes-y-oficios-manuales"
+                        });
+                });
+
+            modelBuilder.Entity("OficiosYa.Domain.Entities.UbicacionProfesional", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<double>("Latitud")
                         .HasColumnType("double precision");
@@ -274,12 +767,21 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Property<double>("Longitud")
                         .HasColumnType("double precision");
 
-                    b.Property<DateTime>("UltimaActualizacion")
+                    b.Property<string>("NombreDireccion")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProfesionalId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UltimaActualizacion")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("TrabajadorId");
+                    b.HasKey("Id");
 
-                    b.ToTable("UbicacionesTrabajadores", (string)null);
+                    b.HasIndex("ProfesionalId");
+
+                    b.ToTable("UbicacionesProfesionales", (string)null);
                 });
 
             modelBuilder.Entity("OficiosYa.Domain.Entities.Usuario", b =>
@@ -298,6 +800,10 @@ namespace OficiosYa.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -306,8 +812,15 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Property<DateTime>("FechaRegistro")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("FotoUrl")
-                        .HasColumnType("text");
+                    b.Property<string>("FotoPerfil")
+                        .HasColumnType("text")
+                        .HasColumnName("FotoPerfil");
+
+                    b.Property<double>("Latitud")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Longitud")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -318,6 +831,9 @@ namespace OficiosYa.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("Rol")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Telefono")
                         .IsRequired()
                         .HasColumnType("text");
@@ -327,7 +843,7 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.ToTable("Usuarios", (string)null);
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.UsuarioRol", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.UsuarioRole", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -345,40 +861,32 @@ namespace OficiosYa.Infrastructure.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("UsuariosRoles", (string)null);
+                    b.ToTable("UsuarioRole");
                 });
 
             modelBuilder.Entity("OficiosYa.Domain.Entities.Calificacion", b =>
                 {
-                    b.HasOne("OficiosYa.Domain.Entities.SolicitudServicio", "Solicitud")
-                        .WithMany()
-                        .HasForeignKey("SolicitudId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("OficiosYa.Domain.Entities.Usuario", "Emisor")
+                        .WithMany("CalificacionesEmitidas")
+                        .HasForeignKey("EmisorId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("OficiosYa.Domain.Entities.Usuario", "UsuarioCalifica")
-                        .WithMany()
-                        .HasForeignKey("UsuarioCalificaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("OficiosYa.Domain.Entities.Usuario", "Receptor")
+                        .WithMany("CalificacionesRecibidas")
+                        .HasForeignKey("ReceptorId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("OficiosYa.Domain.Entities.Usuario", "UsuarioCalificado")
-                        .WithMany()
-                        .HasForeignKey("UsuarioCalificadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Emisor");
 
-                    b.Navigation("Solicitud");
-
-                    b.Navigation("UsuarioCalifica");
-
-                    b.Navigation("UsuarioCalificado");
+                    b.Navigation("Receptor");
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.DireccionUsuario", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Cliente", b =>
                 {
                     b.HasOne("OficiosYa.Domain.Entities.Usuario", "Usuario")
-                        .WithMany("Direcciones")
+                        .WithMany()
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -386,100 +894,81 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.SolicitudCandidato", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.DireccionCliente", b =>
                 {
-                    b.HasOne("OficiosYa.Domain.Entities.SolicitudServicio", "Solicitud")
-                        .WithMany("Candidatos")
-                        .HasForeignKey("SolicitudId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OficiosYa.Domain.Entities.Trabajador", "Trabajador")
-                        .WithMany()
-                        .HasForeignKey("TrabajadorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Solicitud");
-
-                    b.Navigation("Trabajador");
-                });
-
-            modelBuilder.Entity("OficiosYa.Domain.Entities.SolicitudServicio", b =>
-                {
-                    b.HasOne("OficiosYa.Domain.Entities.Usuario", "Cliente")
-                        .WithMany()
+                    b.HasOne("OficiosYa.Domain.Entities.Cliente", "Cliente")
+                        .WithMany("Direcciones")
                         .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OficiosYa.Domain.Entities.DireccionUsuario", "Direccion")
-                        .WithMany()
-                        .HasForeignKey("DireccionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OficiosYa.Domain.Entities.Oficio", "Oficio")
-                        .WithMany()
-                        .HasForeignKey("OficioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OficiosYa.Domain.Entities.Trabajador", "TrabajadorAsignado")
-                        .WithMany()
-                        .HasForeignKey("TrabajadorAsignadoId");
-
                     b.Navigation("Cliente");
-
-                    b.Navigation("Direccion");
-
-                    b.Navigation("Oficio");
-
-                    b.Navigation("TrabajadorAsignado");
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.Trabajador", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Oficio", b =>
+                {
+                    b.HasOne("OficiosYa.Domain.Entities.Rubro", "Rubro")
+                        .WithMany("Oficios")
+                        .HasForeignKey("RubroId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Rubro");
+                });
+
+            modelBuilder.Entity("OficiosYa.Domain.Entities.PasswordResetToken", b =>
                 {
                     b.HasOne("OficiosYa.Domain.Entities.Usuario", "Usuario")
-                        .WithOne()
-                        .HasForeignKey("OficiosYa.Domain.Entities.Trabajador", "Id")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.TrabajadorOficio", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Profesional", b =>
+                {
+                    b.HasOne("OficiosYa.Domain.Entities.Usuario", "Usuario")
+                        .WithOne()
+                        .HasForeignKey("OficiosYa.Domain.Entities.Profesional", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("OficiosYa.Domain.Entities.ProfesionalOficio", b =>
                 {
                     b.HasOne("OficiosYa.Domain.Entities.Oficio", "Oficio")
-                        .WithMany("Trabajadores")
+                        .WithMany("Profesionales")
                         .HasForeignKey("OficioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OficiosYa.Domain.Entities.Trabajador", "Trabajador")
+                    b.HasOne("OficiosYa.Domain.Entities.Profesional", "Profesional")
                         .WithMany("Oficios")
-                        .HasForeignKey("TrabajadorId")
+                        .HasForeignKey("ProfesionalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Oficio");
 
-                    b.Navigation("Trabajador");
+                    b.Navigation("Profesional");
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.UbicacionTrabajador", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.UbicacionProfesional", b =>
                 {
-                    b.HasOne("OficiosYa.Domain.Entities.Trabajador", "Trabajador")
-                        .WithOne("Ubicacion")
-                        .HasForeignKey("OficiosYa.Domain.Entities.UbicacionTrabajador", "TrabajadorId")
+                    b.HasOne("OficiosYa.Domain.Entities.Profesional", "Profesional")
+                        .WithMany("Ubicaciones")
+                        .HasForeignKey("ProfesionalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Trabajador");
+                    b.Navigation("Profesional");
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.UsuarioRol", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.UsuarioRole", b =>
                 {
                     b.HasOne("OficiosYa.Domain.Entities.Usuario", "Usuario")
                         .WithMany("Roles")
@@ -490,26 +979,33 @@ namespace OficiosYa.Infrastructure.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Cliente", b =>
+                {
+                    b.Navigation("Direcciones");
+                });
+
             modelBuilder.Entity("OficiosYa.Domain.Entities.Oficio", b =>
                 {
-                    b.Navigation("Trabajadores");
+                    b.Navigation("Profesionales");
                 });
 
-            modelBuilder.Entity("OficiosYa.Domain.Entities.SolicitudServicio", b =>
-                {
-                    b.Navigation("Candidatos");
-                });
-
-            modelBuilder.Entity("OficiosYa.Domain.Entities.Trabajador", b =>
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Profesional", b =>
                 {
                     b.Navigation("Oficios");
 
-                    b.Navigation("Ubicacion");
+                    b.Navigation("Ubicaciones");
+                });
+
+            modelBuilder.Entity("OficiosYa.Domain.Entities.Rubro", b =>
+                {
+                    b.Navigation("Oficios");
                 });
 
             modelBuilder.Entity("OficiosYa.Domain.Entities.Usuario", b =>
                 {
-                    b.Navigation("Direcciones");
+                    b.Navigation("CalificacionesEmitidas");
+
+                    b.Navigation("CalificacionesRecibidas");
 
                     b.Navigation("Roles");
                 });

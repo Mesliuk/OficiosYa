@@ -1,83 +1,36 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using OficiosYa.Application.Handlers.Rubros;
+using OficiosYa.Application.DTOs;
 
 namespace OficiosYa.Api.Controllers
 {
-    public class OficioController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class RubrosController : ControllerBase
     {
-        // GET: OficioController
-        public ActionResult Index()
+        private readonly GetRubrosHandler _getRubrosHandler;
+
+        public RubrosController(GetRubrosHandler getRubrosHandler)
         {
-            return View();
+            _getRubrosHandler = getRubrosHandler;
         }
 
-        // GET: OficioController/Details/5
-        public ActionResult Details(int id)
+        // GET api/rubros
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] string? search = null, [FromQuery] int page = 1, [FromQuery] int size = 100)
         {
-            return View();
+            var result = await _getRubrosHandler.HandleAsync(search, page, size);
+            return Ok(result);
         }
 
-        // GET: OficioController/Create
-        public ActionResult Create()
+        // GET api/rubros/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            return View();
-        }
-
-        // POST: OficioController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: OficioController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: OficioController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: OficioController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: OficioController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var rubro = await _getRubrosHandler.HandleByIdAsync(id);
+            if (rubro == null) return NotFound();
+            return Ok(rubro);
         }
     }
 }
+
