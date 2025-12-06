@@ -34,7 +34,8 @@
                 Telefono = dto.Telefono,
                 PasswordHash = PasswordHasher.Hash(dto.Password),
                 Rol = UsuarioRoleEnum.Cliente,
-                FotoPerfil = null
+                FotoPerfil = null,
+                Direccion = dto.Direccion ?? string.Empty
             };
 
             await _usuarioRepository.AgregarAsync(usuario);
