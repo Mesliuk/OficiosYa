@@ -212,7 +212,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseOpenApi();
 app.UseCors("AllowNext");
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
