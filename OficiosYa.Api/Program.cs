@@ -1,20 +1,21 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using OficiosYa.Api.Filters;
+using OficiosYa.Api.Middleware;
+using OficiosYa.Api.Services;
 using OficiosYa.Application.Interfaces;
 using OficiosYa.Application.Services;
 using OficiosYa.Infrastructure.Persistence;
 using OficiosYa.Infrastructure.Repositories;
-using OficiosYa.Api.Middleware;
-using Microsoft.Extensions.FileProviders;
-using OficiosYa.Api.Filters;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using System.Text;
-using OficiosYa.Api.Services;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.Logging;
-using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,7 +50,7 @@ var jwtAudience = jwtSection.GetValue<string>("Audience") ?? "OficiosYaAudience"
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
@@ -65,6 +66,44 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            // Esto reemplaza la respuesta 401 por defecto
+            context.HandleResponse();
+
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+
+            var result = JsonSerializer.Serialize(new
+            {
+                error = "No estás autenticado. Enviá un token válido."
+            });
+
+            return context.Response.WriteAsync(result);
+        },
+        OnForbidden = context =>
+        {
+            // Esto reemplaza la respuesta 403 por defecto
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            context.Response.ContentType = "application/json";
+
+            var result = JsonSerializer.Serialize(new
+            {
+                error = "No tenés permisos para acceder a este recurso."
+            });
+
+            return context.Response.WriteAsync(result);
+        }
+    };
+});
+
+//Authorization
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireClienteRole", policy => policy.RequireRole("Cliente"));
+    options.AddPolicy("RequireProfesionalRole", policy => policy.RequireRole("Profesional"));
 });
 
 // DbContext
@@ -153,7 +192,8 @@ builder.Services.AddSwaggerGen(c =>
         Name = "Authorization",
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
+        Scheme = "Bearer",
+        BearerFormat = "JWT"
     });
 
     c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement {

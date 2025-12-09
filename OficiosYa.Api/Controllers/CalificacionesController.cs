@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OficiosYa.Api.Models;
 using OficiosYa.Application.Commands.Calificaciones;
 using OficiosYa.Application.DTOs;
@@ -8,6 +9,7 @@ namespace OficiosYa.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Cliente")]
     public class CalificacionesController : ControllerBase
     {
         private readonly RegistrarCalificacionHandler _registrarCalificacionHandler;
