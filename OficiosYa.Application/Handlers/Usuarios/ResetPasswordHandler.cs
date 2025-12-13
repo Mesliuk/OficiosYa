@@ -1,22 +1,30 @@
-﻿using OficiosYa.Application.Commands.Usuarios;
+﻿using System.Threading.Tasks;
+using OficiosYa.Application.Commands.Usuarios;
 using OficiosYa.Application.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OficiosYa.Application.Utils;
 
 namespace OficiosYa.Application.Handlers.Usuarios
 {
     public class ResetPasswordHandler
     {
-        private readonly IPasswordResetService _passwordResetService;
-        public ResetPasswordHandler(IPasswordResetService service) { _passwordResetService = service; }
+        private readonly IUsuarioRepository _usuarioRepository;
 
+        public ResetPasswordHandler(IUsuarioRepository usuarioRepository)
+        {
+            _usuarioRepository = usuarioRepository;
+        }
 
         public async Task<bool> HandleAsync(ResetPasswordCommand command)
         {
-            return await _passwordResetService.ResetPasswordAsync(command.Codigo, command.NuevoPassword);
+            if (command == null) return false;
+
+            var usuario = await _usuarioRepository.ObtenerPorEmailAsync(command.Correo?.Trim() ?? string.Empty);
+            if (usuario == null) return false;
+
+            var hashed = PasswordHasher.Hash(command.NuevoPassword ?? string.Empty);
+
+            var updated = await _usuarioRepository.UpdatePasswordAsync(usuario.Id, hashed);
+            return updated;
         }
     }
 }
