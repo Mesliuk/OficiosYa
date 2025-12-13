@@ -98,7 +98,7 @@ namespace OficiosYa.Api.Controllers
             var code = _tokenStore.GenerateAndStore(email, TimeSpan.FromMinutes(15));
 
             // Construir link de reset (frontend debe tener ruta que capture email+code y permita nueva contraseña)
-            var frontendUrl = _config.GetValue<string>("Frontend:Url") ?? "https://localhost:4200";
+            var frontendUrl = _config.GetValue<string>("Frontend:Url") ?? "https://localhost:3000";
             var resetPath = _config.GetValue<string>("Frontend:ResetPath") ?? "/reset-password";
             var resetUrl = $"{frontendUrl.TrimEnd('/')}{resetPath}?email={Uri.EscapeDataString(email)}&code={Uri.EscapeDataString(code)}";
 
