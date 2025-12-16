@@ -211,7 +211,7 @@ namespace OficiosYa.Api.Controllers
                 {
                     await FotoPerfil.CopyToAsync(stream);
                 }
-                var relativePath = Path.Combine("uploads", fileName).Replace('\\','/');
+                var relativePath = Path.Combine("uploads", fileName).Replace('\\', '/');
 
                 if (profesional.Usuario != null)
                 {
