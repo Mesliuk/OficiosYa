@@ -182,6 +182,62 @@ namespace OficiosYa.Api.Controllers
             return NoContent();
         }
 
+        // PATCH api/profesional/{usuarioId}
+        [HttpPatch("{usuarioId}")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Patch(int usuarioId, [FromForm] PatchProfesionalRequest request, IFormFile? FotoPerfil = null)
+        {
+            var profesional = await _profRepo.GetByUsuarioIdAsync(usuarioId);
+            if (profesional == null) return NotFound();
+
+            // handle photo if provided
+            if (FotoPerfil != null)
+            {
+                if (FotoPerfil.Length > 2_000_000) return BadRequest("FotoPerfil too large (max 2MB)");
+                if (!AllowedImageMimeTypes.Contains(FotoPerfil.ContentType)) return BadRequest("Unsupported image type. Allowed: jpeg, png, webp");
+
+                // remove old file if exists - foto stored in Usuario.FotoPerfil
+                if (!string.IsNullOrEmpty(profesional.Usuario?.FotoPerfil))
+                {
+                    var oldFile = Path.Combine(_env.ContentRootPath, "wwwroot", profesional.Usuario.FotoPerfil.Replace('/', Path.DirectorySeparatorChar));
+                    try { if (System.IO.File.Exists(oldFile)) System.IO.File.Delete(oldFile); } catch { }
+                }
+
+                var uploadsRoot = _config.GetValue<string>("Uploads:RootPath") ?? Path.Combine(_env.ContentRootPath, "wwwroot", "uploads");
+                Directory.CreateDirectory(uploadsRoot);
+                var fileName = Path.GetRandomFileName() + Path.GetExtension(FotoPerfil.FileName);
+                var filePath = Path.Combine(uploadsRoot, fileName);
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    await FotoPerfil.CopyToAsync(stream);
+                }
+                var relativePath = Path.Combine("uploads", fileName).Replace('\\', '/');
+
+                if (profesional.Usuario != null)
+                {
+                    profesional.Usuario.FotoPerfil = relativePath;
+                }
+            }
+
+            // update only provided fields
+            if (profesional.Usuario != null)
+            {
+                if (!string.IsNullOrEmpty(request.Nombre)) profesional.Usuario.Nombre = request.Nombre;
+                if (!string.IsNullOrEmpty(request.Apellido)) profesional.Usuario.Apellido = request.Apellido;
+                if (!string.IsNullOrEmpty(request.Telefono)) profesional.Usuario.Telefono = request.Telefono;
+                // Email editing removed from PATCH
+                if (!string.IsNullOrEmpty(request.Direccion)) profesional.Usuario.Direccion = request.Direccion;
+                if (request.Latitud.HasValue) profesional.Usuario.Latitud = request.Latitud.Value;
+                if (request.Longitud.HasValue) profesional.Usuario.Longitud = request.Longitud.Value;
+            }
+
+            if (!string.IsNullOrEmpty(request.Descripcion)) profesional.Descripcion = request.Descripcion;
+
+            await _profRepo.UpdateAsync(profesional);
+
+            return NoContent();
+        }
+
         // DELETE api/profesional/{usuarioId}?onlyLocation=true
         [HttpDelete("{usuarioId}")]
         public async Task<IActionResult> Delete(int usuarioId, [FromQuery] bool onlyLocation = false)

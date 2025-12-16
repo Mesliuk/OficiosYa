@@ -54,5 +54,26 @@ namespace OficiosYa.Infrastructure.Repositories
 
             return calificaciones.Average(c => c.Puntaje);
         }
+
+        public async Task<IList<CalificacionDto>> ObtenerPorReceptorAsync(int receptorId)
+        {
+            var calificaciones = await _context.Calificaciones
+                .Where(c => c.ReceptorId == receptorId)
+                .Select(c => new CalificacionDto
+                {
+                    ReceptorId = c.ReceptorId,
+                    EmisorId = c.EmisorId,
+                    Puntaje = c.Puntaje,
+                    Comentario = c.Comentario
+                })
+                .ToListAsync();
+
+            if (calificaciones == null || !calificaciones.Any())
+            {
+                return new List<CalificacionDto>();
+            }
+
+            return calificaciones;
+        }
     }
 }

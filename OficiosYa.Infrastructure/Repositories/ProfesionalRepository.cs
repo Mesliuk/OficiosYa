@@ -178,5 +178,19 @@ namespace OficiosYa.Infrastructure.Repositories
             _context.Profesionales.Remove(prof);
             await _context.SaveChangesAsync();
         }
+
+        public Task ActualizarRatingAsync(int receptorId, double v1, int v2)
+        {
+            var profesional = _context.Profesionales.FirstOrDefault(p => p.Usuario.Id == receptorId);
+            if (profesional != null)
+            {
+                profesional.RatingPromedio = v1;
+                profesional.TotalCalificaciones = v2;
+                _context.Profesionales.Update(profesional);
+            };
+
+            return  _context.SaveChangesAsync();
+
+        }
     }
 }

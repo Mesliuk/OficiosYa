@@ -7,5 +7,7 @@ namespace OficiosYa.Application.DTOs
         public string Email { get; set; } = null!;
         public string Telefono { get; set; } = null!;
         public string Password { get; set; } = null!;
+        
+
     }
 }
