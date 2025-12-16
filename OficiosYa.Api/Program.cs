@@ -103,7 +103,7 @@ builder.Services.AddScoped<OficioService>();
 builder.Services.AddScoped<CalificacionService>();
 builder.Services.AddScoped<UbicacionService>();
 // Registro correcto contra la interfaz
-builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
+//builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 
 // Register photo service
 builder.Services.AddScoped<IPhotoService, LocalPhotoService>();
@@ -177,7 +177,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var db = services.GetRequiredService<OficiosYaDbContext>();
-        db.Database.Migrate();
+        //db.Database.Migrate();
         // Seed default rubros
         await OficiosYa.Infrastructure.Seed.RubroSeeder.SeedAsync(db);
     }
@@ -212,19 +212,19 @@ if (app.Environment.IsDevelopment())
 
 app.UseOpenApi();
 app.UseCors("AllowNext");
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
 
-public class PasswordResetService : IPasswordResetService
+/*public class PasswordResetService : IPasswordResetService
 {
     public Task<string> GenerarTokenAsync(int usuarioId) => Task.FromResult("");
     public Task<bool> ValidarTokenAsync(string token) => Task.FromResult(false);
     public Task<bool> ResetPasswordAsync(string token, string nuevoPassword) => Task.FromResult(false);
-}
+}*/
 
 public static class OpenApiExtensions
 {
