@@ -76,7 +76,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowNext", policy =>  // ← Darle nombre
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000","https://oficios-ya.sandbox.devlights.com")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
